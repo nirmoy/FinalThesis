@@ -26,4 +26,14 @@
     %note     = "",
 }
 
+@misc{NetFlow,
+  title = {Cisco IOS NetFlow},
+  howpublished = {\url{http://www.cisco.com/en/US/products/ps6601/products_ios_protocol_group_home.html}},
+  %note = {Accessed: 2010-09-30}
+}
 
+@misc{sFlow,
+  title = {sFlow Official Site},
+  howpublished = {\url{http://www.sflow.org}},
+  %note = {Accessed: 2010-09-30}
+}

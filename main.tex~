@@ -26,11 +26,11 @@
   \author{A Project Report Submitted in the partial fulfillment of the \\requirements for the award of degree of \\
     \\{\Large Master of Technology}\\in\\{\Large Computer Science}\\\\\\By\\\bf{Nirmoy Das}
   \vspace*{.2in}\\
-    \includegraphics[scale=0.5]{figs/uoh.eps}\\ \\Department of
+    \includegraphics[scale=0.5]{figs/uoh.eps}\\ \\School of
   Computer and Information  Sciences\\University of
-    Hyderabad\\Hyderabad, India\\ \\June, 2008 }
+    Hyderabad\\Hyderabad, India\\ \\June, 2013 }
 \end{titlepage}
-
+\iffalse
 \date{}
 
 \renewenvironment{frontmatter}{\pagenumbering{roman}}{\newpage
@@ -53,12 +53,13 @@
   \markboth{#1}{#1}}
 \newenvironment{abstract}{\null\vfil\prefacesection{Abstract}}{\par\vfill\null}
 \newenvironment{acknowledgments}{\null\vfil\prefacesection{Acknowledgments}}{\par\vfill\null}
+\fi
 
 \begin{document}
 %\begin{large}
   \maketitle
  \onehalfspacing
-
+\iffalse
 
  \begin{frontmatter}
 
@@ -82,11 +83,11 @@ Dean ,\\
 School of CIS,\\
 University of Hyderabad\\}
 }
-
-    \begin{dedication}
-    \thispagestyle{empty}
-      My Parents and Supervisor.
-    \end{dedication}
+\fi	
+%    \begin{dedication}
+ %   \thispagestyle{empty}
+  %    My Parents and Supervisor.
+   % \end{dedication}
     
  %   \begin{acknowledgments}
  %     \input{ack.tex}

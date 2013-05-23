@@ -5,6 +5,14 @@ S.~B. Vijay~Mann, Anilkumar~Vishnoi, ``Living on the edge: Monitoring network
   flows at the edge in cloud data center,'' in {\em Communication Systems and
   Networks (COMSNETS), 2013 Fifth International Conference}.
 
+\bibitem{NetFlow}
+``Cisco ios netflow.''
+  \url{http://www.cisco.com/en/US/products/ps6601/products_ios_protocol_group_%
+home.html}.
+
+\bibitem{sFlow}
+``sflow official site.'' \url{http://www.sflow.org}.
+
 \bibitem{TSITMAH}
 Y.~L. Yeonhee~Lee, ``Toward scalable internet traffic measurement and analysis
   with hadoop,'' {\em ACM SIGCOMM Computer Communication Review (CCR)},

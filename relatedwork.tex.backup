@@ -42,4 +42,8 @@
     \subsection{Data Rate Prediction in Presence of Sampling}
     EMC2  predict data rate my multiplying length of the packet with sampling rate given in flow packet.
     It can also report low sampling rate by accumulating samples from different exported devices. 
-    
+    \subsection{Advantages and Limitations}
+    advantages of EMC2 are
+    \begin{itemize}
+     \item Scalable and distributed monitoring
+    \end{itemize}
