@@ -1,0 +1,129 @@
+\documentclass[a4,12pt,oneside]{book}
+%\usepackage{times}
+\usepackage{algorithmic} 
+\usepackage[algoruled]{algorithm2e} 
+
+
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{makeidx}
+\usepackage{float}
+\geometry{tmargin=1 in,  bmargin=1 in, lmargin=1.5 in,  rmargin= 1 in}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\makeindex
+
+\pagestyle{plain}
+%\textwidth 6in
+%\textheight 9in
+
+\begin{titlepage}
+ \title{\bfseries\huge Scalable Flow Monitoring for Data Center Network }
+  \author{A Project Report Submitted in the partial fulfillment of the \\requirements for the award of degree of \\
+    \\{\Large Master of Technology}\\in\\{\Large Computer Science}\\\\\\By\\\bf{Nirmoy Das}
+  \vspace*{.2in}\\
+    \includegraphics[scale=0.5]{figs/uoh.eps}\\ \\Department of
+  Computer and Information  Sciences\\University of
+    Hyderabad\\Hyderabad, India\\ \\June, 2008 }
+\end{titlepage}
+
+\date{}
+
+\renewenvironment{frontmatter}{\pagenumbering{roman}}{\newpage
+  \pagenumbering{arabic}}
+\renewcommand{\bibname}{Bibliography}
+\newtheorem{algo}{Algorithm}[chapter]
+
+\newenvironment{dedication}{
+  \thispagestyle{empty}
+  \clearpage\null\vfill
+  \sl \hspace{1in}To,\\
+  
+  \hspace{1.5in}}{
+  \vspace{3in}\vfill\null}
+
+
+\def\prefacesection#1{%
+  \chapter*{#1}
+  \addcontentsline{toc}{chapter}{#1}
+  \markboth{#1}{#1}}
+\newenvironment{abstract}{\null\vfil\prefacesection{Abstract}}{\par\vfill\null}
+\newenvironment{acknowledgments}{\null\vfil\prefacesection{Acknowledgments}}{\par\vfill\null}
+
+\begin{document}
+%\begin{large}
+  \maketitle
+ \onehalfspacing
+
+
+ \begin{frontmatter}
+
+    {%certificate
+     \thispagestyle{empty}
+\begin{center} \textbf{\large CERTIFICATE}  \end{center}\vspace{.75in}
+{\sloppy This is to certify that the project work entitled ``\textbf{Scalable Flow Monitoring for Data Center Network}'' being
+    submitted to University of Hyderabad by \textbf{\mbox{Nirmoy Das}}
+    (Reg. No. 11MCMT20), in partial fulfillment for the award of the degree of
+    Master of Technology in Computer Science, is a bona fide work
+    carried out by her under my supervision.}\\ \\ \\ \\ \\ \\
+
+\parbox[t]{3in}{\flushleft Ms. Anupama Potluri\\
+Project Supervisor,\\
+School of CIS,\\
+University of Hyderabad\\}
+
+\vspace{1.5in}
+\parbox[t]{3in}{\flushleft 
+Dean ,\\
+School of CIS,\\
+University of Hyderabad\\}
+}
+
+    \begin{dedication}
+    \thispagestyle{empty}
+      My Parents and Supervisor.
+    \end{dedication}
+    
+ %   \begin{acknowledgments}
+ %     \input{ack.tex}
+%    \end{acknowledgments}
+    
+%   \begin{abstract}
+%      \input{abstract.tex}
+%    \end{abstract}
+    
+    \tableofcontents
+%    \listoffigures
+ %   \listoftables
+\end{frontmatter}
+  
+%\renewcommand{\baselinestretch}{1.7}
+%\chapter{\label{chap:intro}Introduction}
+%\input{introduction.tex}
+\chapter{\label{chap:survey}Related Work}
+\input{relatedwork.tex}
+%\chapter{\label{chap:our-idea} Proposal and Implementation}
+%\input{approach.tex}
+%\chapter{\label{chap:Implementation}Results and Analysis}
+%\input{results.tex}
+%\chapter{\label{chap:conclusion}Conclusions and Future Work}
+%\input{conclusion.tex}
+%\appendix
+%\chapter{\label{chap:appendix} Design of the New Self-Organized Clustering Algorithm}
+%\input{appendix.tex}
+%\chapter{\label{chap:appendix} Modifications in \textit{ns-2} source code}
+%\input{appendix_mod.tex}
+\nocite{*}
+\bibliographystyle{ieeetr}
+\newpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{ref.bib}
+\newpage
+\addcontentsline{toc}{chapter}{Index}
+%\printindex
+%\end{large}
+\end{document}

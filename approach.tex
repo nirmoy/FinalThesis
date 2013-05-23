@@ -1,0 +1,349 @@
+\paragraph\
+In this chapter, I describe the proposed protocol \textit{QoS aware Routing using Diffserv principles\cite{thesis}} and I present the design of the protocol. I also specify my contribution to that protocol in the implementation part. To compare our scheme with respect to parameters like call acceptance ratio, latency to start dataplane operations, packet delivery ratio and throughput, I have ported ASAP\cite{asap} and SWAN\cite{swan}, which were already described in the previous chapter, to network simulator \textit{ns-2.29}.
+%AP: Please put ns-2.29 in italics everywhere.
+
+\section{QoS aware Routing using Diffserv Principles\cite{thesis}}
+\paragraph\
+This scheme is proposed by Jaya Laksmi et al.\cite{QoSdiff} to take advantage of both Intserv and Diffserv. It provides
+\begin{enumerate}
+\item Scalability in terms of meters and policers used.
+\item Dynamic resource allocation per flow.
+\item Per QoS-level policing and metering.
+\item Multiple classes of service.
+\item Soft state resource release.
+\item Low signaling overhead.
+\end{enumerate}
+
+\paragraph\
+In this scheme, the source acts as an edge router and others act as core routers. Service level agreements like Committed Information Rate(CIR), Peak Information Rate(PIR) are configured dynamically. An assumption in this scheme is that every node knows the existing QoS levels and their corresponding Diffserv Code Points(DSCP).
+
+\subsection{Routing Algorithm}
+\paragraph*{Route discovery}
+To admit a real time flow, the source first checks its routing table. If it does not have any route for this flow, then it will do admission control. If admission control succeeds, the source broadcasts QRREQ packet. QRREQ carries minimum and maximum bandwidth requirements of the application. Intermediate nodes which receive this QRREQ will do admission control and if it succeeds they will rebroadcast the QRREQ packet; otherwise they simply discard the packet. If admission control succeeds at the destination, it will give a reply, QRREP, to the first received QRREQ in the reverse path, after populating its routing table and session table. Session table is a table that contains session ID of that flow, source ID , the minimum bandwidth reserved, length of the path and initial DSCP value. The amount of reserved bandwidth is deducted from available bandwidth and added to the corresponding QoS level. Every intermediate node on the path checks for admission control once again when forwarding the reply. If it succeeds, the node adds the minimum bandwidth to the bandwidth for that QoS level and deducts it from its available bandwidth. Otherwise, the node at which admission control fails will set the admission control (\textit{ac}) bit in the QRREP and just forwards it towards the source. The nodes downstream to that node will simply forward the reply to the source without processing it further. If the source gets QRREP with \textit{ac} bit set, then it will initiate the route discovery process again. Otherwise, it populates its routing table and session table and starts transmitting data.
+
+\paragraph*{Resource maintenance}
+Reserved resources are refreshed through data plane operations. If the flow is completed or a route break occurs and the flow no longer uses a node, the soft state timer on the reservation expires and the bandwidth of that flow is returned to available bandwidth.
+
+\paragraph*{Route maintenance}
+When a route break occurs while forwarding data, the node which precedes the broken link sends RERR message to the source after releasing resources of that flow and resources of all the other flows which are using that path. After receiving RERR, the source restarts the route discovery process.
+
+\subsection{Data Plane Operation}
+After finding the route, the source marks the data packets with the corresponding initial diffserv code point. After applying metering and policing these packets are again remarked with different drop precedences based on whether they are in- or out-of-profile. Now these are enqueued into the corresponding queues. The marking and conditioning is done only at the source node as it is the edge router. The intermediate nodes, which are like core routers, just check the DSCP value in the packets and enqueue into the corresponding queues. When congestion occurs, the packets will be dropped according to drop precedence. Weighted Round Robin(WRR) mechanism is used to schedule the packets.
+
+The protocol is implemented in the network simulator \textit{ns-2.29} by extending the Dynamic Source Routing protocol\cite{dsr}.
+
+\section{Design of the Protocol}
+\paragraph\
+The class diagram of the whole protocol is given in fig\ref{classdiagram}. All the classes are specific to \textit{ns-2.29} implementation of DSR\cite{dsr} as we are extending DSR protocol to implement our protocol. \textit{DSRAgent} is the main class which implements all functionalities like route discovery and route maintenance.
+%We will explain about each of these classes in the remaining sections.
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=.77]{figures/classdiagram.eps}
+\caption{Class diagram.}
+\label{classdiagram}
+\end{figure}
+
+\paragraph\
+Jayalakshmi had defined QRREQ and QRREP packets by extending normal RREQ and RREP packets of DSR\cite{dsr}. The extra fields in the QRREQ packet are minimum bandwidth, maximum bandwidth, bottleneck bandwidth and session ID. The QRREP packet contains bottleneck bandwidth, session ID and initial DSCP of the flow. She had implemented the generation and propagation of these QRREQs and QRREPs.
+
+\paragraph\
+Tholoana Masupha had defined the new interface queue \textit{dsrDiff} for our protocol. For this purpose she has defined a new class - \textit{dsrDiff}. This class is also useful to differentiate the edge router functionality from the core router functionality. She has defined four QoS levels of service based on the application bandwidth requirements.
+
+\paragraph\
+My contribution to the protocol is the implementation of:
+\begin{enumerate}
+\item Route request table modification.
+\item Admission control functionality.
+\item New route cache implementation.
+\item Dynamic allocation of resources to each class. 
+\item Soft state management of session records.
+\item Data plane processing.
+\end{enumerate}
+
+The remaining sections of this chapter describe each of the above in detail. First, we describe the way DSR handles each of these. Then, we describe the modifications needed to support QoS extensions and how they have been designed and implemented.
+
+\section{Request Table Modification}
+\paragraph\
+In DSR, if many flows start at the same time from the same source to the same destination, route discovery is initiated for that destination only once. The source checks to see if any request is outstanding for this destination in its request table. If so, it does not initiate route discovery. But in our protocol the source should initiate route discovery for all flows because we need to reserve the resources for every flow. So to achieve this, we have added session ID field to the request table. The source checks its routing table and compares the destination ID and session ID of the current flow with those which are destined to the same node. If no matching entry is found, then the source initiates route discovery for the new flow. If an exact match exists, then, the data packets can be forwarded using that route cache entry.
+
+\section{Admission Control}
+\paragraph\
+DSR is a best-effort routing protocol. It does not require any available bandwidth information at that
+%AP: you have used doesn't in many places. Please remember not to do so in formal documents.
+ node. But our protocol is QoS-aware and it should guarantee the flows. It should not admit the flows for which nodes do not have sufficient bandwidth. So to do this admission control, every node should know the available banwidth at that node. We are maintaining the available bandwidth value in the MAC layer. As shown in the class diagram \ref{classdiagram} we have added available bandwidth field in the MAC class. This value is initialized to the link bandwidth. As bandwidth is reserved and released from flows, this value is changed.
+
+\section{New Route Cache Implementation}
+\paragraph\
+In DSR, every node has its own route cache. The route cache can store the learned source routes. These routes can be used by intermediate nodes. Intermediate nodes can give reply by using these cached route entries. These route entries are refreshed through data plane operations. The node can also remove the routes when it learns about the broken link by getting RERR packet. If the route is not used by any flow, then, after timeout period these routes are deleted from the route cache.
+
+\paragraph*{Implementation Details} 
+In \textit{ns-2.29} implementation of DSR, three types of caches are defined. Those are \textit{SimpleCache}, \textit{LinkCache}, \textit{MobiCache}. By default \textit{DSRAgent} chooses \textit{MobiCache}. \textit{MobiCache} stores the whole source route in it. It defines two caches - primary cache and secondary cache. Primary cache is used by the source and the destination nodes. Intermediate nodes use secondary cache to store the routes. As shown in the class diagram \ref{classdiagram} \textit{MobiCache} is derived from \textit{RouteCache} which is an abstract class. Primary cache and secondary caches are objects of \textit{Cache} class. \textit{Cache} class is a set of objects of \textit{Path} class. The \textit{Path} class is an array of nodeIDs which represent the path for a destination that this node is aware of. Each \textit{Path} object in the \textit{Cache} object represents the route to all the various nodes that comprise this path.
+
+\paragraph\
+In our protocol we need to store the session information, in addition to the route, in the cache for a flow. Session information tells how much bandwidth to release from which QoS class for that flow. So, this session information should be maintained per flow. As explained before, the cache maintains total route to the destination in one path object. So, if there are multiple flows to the same destination for which the same route is found after QoS route discovery, we need to maintain the list of associated session records for the same path object. Also, if there are data flows to any of the other nodes on the route, these are also part of the same path object and hence session records for all these flows are also maintained as part of the same path object. The algorithm for adding route and session record is given in Algorithm 1.
+
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{addRoute() function}}}
+\begin{algorithmic}[1]
+%\STATE	$addRoute(newpath, sessionrecord)$
+\FOR	{each entry in the cache}
+\STATE	compare the newpath with the cache entry.
+\IF	{cache entry is NULL}
+\STATE	add path to the cache.
+\STATE	$AddSRecordatBegining(sessionrecord)$
+\STATE	$return$
+\ELSIF	{total newpath or some part of the new path matches the total or part of cachepath}
+\IF	{$newpath.length() < cachepath.length())$}
+\STATE	$position \leftarrow GetSRecordPosition(sessionrecord)$
+\STATE	$AddSRecordatPosition(sessionrecord, position)$
+\STATE	$return$
+\ELSIF	{$newpath.length() > cachepath.length())$}
+\STATE	append remaining path to the cachepath.
+\STATE	$AddSRecordatEnd(sessionrecord)$
+\STATE	$return$
+\ELSE
+\STATE	$AddSRecordatEnd(sessionrecord)$
+\STATE	$return$
+\ENDIF
+\ENDIF
+%\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph\
+Whenever any intermediate node on the path moves away, the nodes beyond this node are no longer reachable. Hence in DSR implementation, when this happens, the path is truncated up to the node that has   moved away. In addition to this, in DiffQ-DSR, every node should delete the session records of these nodes and reclaim the bandwidth to the available bandwidth. To achieve this, in each session record, we maintain the length of the path to the destiantion of that session. If, after truncation, the length of the path is less than the length in a session record, the destination of that session is no longer reachable. So, we walk through the session list and delete all session records whose path length is greater than the current path length. The session list is maintained in a sorted order to accomplish this efficiently. The following figures show all this functionality clearly.
+%AP: I am still not happy with the description above. Will discuss it with you tomorrow. But, try to rewrite again and show me the new version, if you can, tomorrow.
+
+\begin{figure}
+\centering
+\includegraphics[scale=.45]{figures/s1.eps}
+\caption{Flow f1 starts between s1 and 2 and corresponding cache entries.}
+\label{s1}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=.45]{figures/s2.eps}
+\caption{Flow f2 starts between s1 and D and corresponding cache entries.}
+\label{s2}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=.45]{figures/s3.eps}
+\caption{Flow f3 initiates between s1 and 3 and corresponding cache entries}
+\label{s3}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=.45]{figures/s4.eps}
+\caption{After processing of RERR cache entries.}
+\label{s4}
+\end{figure}
+
+\paragraph\
+In Figure \ref{s1}, consider that there is a flow f1 between s1 and 2. If s1 finds the path \textit{s1-1-2} for the flow f1, then it stores the path \textit{s1-1-2} and the associated session record s2 in its cache. Now after some time, a flow f2 starts between s1 and D and consider that s1 finds that the path \textit{s1-1-2-3-D} satisfies the QoS requirements for the flow f2. Then  while storing this path in its cache, s1 finds that it has already some part of the path in its cache and it just appends the remaining path \textit{3-D} to that path. S1 adds the session record \textit{sd} at the end of the session list as its length of the path value is greater than the previous session record s2's length of the path value. This is shown in Figure \ref{s2}. Now again consider that there is a flow f3 between s1 and 3 and the path satisfying the flow f3's QoS requirements is \textit{s1-1-2-3}. Whenever s1 tries to store this path, it finds that it has already that path in its cache. Then s1 inserts the session record s3 in between s2 and sd in the session list as s3's length field value is 4. This is shown in Figure \ref{s3}. Now if the node 3 moves away, the source gets the route error and it truncates the path from \textit{3-D}. Now the updated path length is 3. So s1 deletes all the session records whose length field is greater than this updated path length. This is shown in Figure \ref{s4}. So by getting RERR for the flow f2 only, s1 initiates the route discovery for f3 even before it gets RERR for this flow. By doing this we can reduce the packet loss.
+
+\paragraph\
+To implement the above functionality we defined two new classes: \textit{QPath} and \textit{SessionRecord}. \textit{QPath} class is derived from \textit{Path} class because we need all the functionality that \textit{Path} class provides. To associate the session list with the path, we have defined container relationship between the SessionRecordList class and QPath class. The class \textit{SessionRecord} contains the fields source Id, session ID, bottleneck bandwidth, DSCP and length of the path. All these classes and the relationships between them is shown %AP: there is no such word as showed - it is shown. Please change it.
+ in Figure \ref{classdiagram} 
+
+\paragraph\
+To store the session records, we need to know the position where to insert because we are maintaining session records in the sorted order. The algorithm for this functionality is given in Algorithm 2.
+
+%$GetSRecordPosition()$
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{GetSRecordPosition() function}}}
+\begin{algorithmic}[1]
+\FOR	{each SRecord in SessionList}
+\IF	{$SRecord.length <= sessionrecord.length$}
+\STATE	$position \leftarrow position+1$
+\ELSE
+\STATE	return position
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\section{Route Maintenance}
+Whenever a route break occurs, the node which precedes the broken link will send RERR to the source. This RERR packet contains the IP addresses of the two nodes between which the link is broken. The processing of RERR is given in Algorithm 3. In this algorithm $DeleteSessionList(n+1)$ function deletes all the session records whose length fields are greater than $n+1$ value.  $n+1$ represents the updated path length.
+
+
+%$processBrokenLink(RERRpacket)$
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{processBrokenLink() function}}}
+\begin{algorithmic}[1]
+%\STATE $processBrokenLink(RERRpacket)$
+\FOR	{each path in the cache}
+\STATE	$n \leftarrow 0$
+\WHILE	{$ n < path.length() $}
+\IF	{path[n] = RERRpacket.fromnode and path[n+1] = RERRpacket.tonode}
+\IF	{$n = 0$}
+\STATE	delete the whole path
+\ELSE
+\STATE	truncate the path from n+1 node
+\ENDIF
+\STATE	$DeleteSessionList(n+1)$
+\STATE	break
+\ENDIF
+\STATE	$n \leftarrow n +1$
+\ENDWHILE
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\section{Session Record Maintenance}
+\paragraph\
+SessionRecordTimer class maintains the soft state of the session records. It checks the sessionrecord list periodically. If any session record timer expires that session record will be deleted and resources are released. This functionality is given in Algorithms 4 and 5.
+
+%$SessionListCheck()$
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{sessionListCheck() function}}}
+\begin{algorithmic}[1]
+\FOR	{each entry in the cache}
+\STATE	$temp \leftarrow GetFirstSRecord()$
+\WHILE	{$ temp \neq NULL$}
+\IF	{$(currenttime - temp.SRTime) > SessionTimeout$}
+\STATE	$temp1 \leftarrow GetNextSRecord()$
+\STATE	$releaseResources(temp)$
+\STATE	$DeleteSRecord(temp)$
+\STATE	$temp \leftarrow temp1$
+\ELSE
+\STATE	$temp \leftarrow GetNextSRecord()$
+\ENDIF
+\ENDWHILE
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{releaseResources() function}}}
+\begin{algorithmic}[1]
+%\STATE	$releaseResources(sessionrecord)$
+\STATE	$addtoAvailBW(sessionrecord.SRbbw)$
+\STATE	$deductFromQoSlevel(sessionrecord.SRbbw)$
+\STATE	$minbw \leftarrow getminBW(sessionrecord.SRdscp)$
+\STATE	$maxbw \leftarrow getmaxBW(sessionrecord.SRdscp)$
+\STATE	$deductFromCIR(minbw)$
+\STATE	$deductFromPIR(maxbw)$
+\STATE	return
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph\
+These session records are refreshed through the dataplane operations. For this purpose we have added new DSR option to hold session ID in data plane packets. The algorithm for this is presented in Algorithm 6.
+
+%$refreshSessionRecord()$
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{refreshSessionRecord() function}}}
+\begin{algorithmic}[1]
+%\STATE $refreshSessionRecord(src, sid)$
+\FOR	{each entry in the cache}
+\STATE	$temp \leftarrow GetFirstSRecord()$
+\WHILE	{$ temp \neq NULL$}
+\IF	{$temp.SRsrc = src\ and\ temp.SRsid = sid$}
+\STATE	$temp.SRTime = currenttime$
+\STATE	$return$
+\ELSE
+\STATE	$temp \leftarrow GetNextSRecord()$
+\ENDIF
+\ENDWHILE
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\section{Dynamic Resource Allocation}
+\paragraph\
+In general Diffserv implementation, the metering values Committed Information Rate(CIR) and Peak Information Rate(PIR) for the QoS classes are fixed and these are assigned to each QoS class at the begining.  %AP: you dont say starting in such places - use the word beginning instead of starting.
+But in our protocol, whenever a flow of that particular QoS class is admitted, then the CIR and PIR values are assigned to that class. These metering values are changed dynamically according to the flows admitted to that class. While processing QRREP every node adds the minimum bandwidth requirement of the flow to the CIR of the QoS class to which that flow belongs. In the same way maximum bandwidth requirement of the flow is added to the PIR.
+
+\section{Data Plane Operation}
+\paragraph\
+In DSR, the data packet carries the whole source route from the source to the destination which is copied from the route cache. Intermediate nodes which get this data packet add the source route to their cache if they do not have it. Otherwise, they simply refresh the route. Instead of carrying the whole source route, the data packet carries flow ID in the new extension of DSR. DSR uses only one interface queue for all the flows to enqueue the packets before they are transmitted by the network interface.
+
+\paragraph\
+In our protocol, every data packet carries the whole source route and to refresh the session records we have added session ID option to the DSR header. At the source node each data packet is metered, marked and policed. Every intermediate node just checks the marked value and enqueues it to the corresponding queue. We have defined four QoS classes of service and three drop precedences for each QoS class. So we need to have four physical queues corresponding to the four QoS classes and each physical queue should have three virtual queues corresponding to the three drop precedences. We are using RED queue management.
+
+\paragraph\
+To implement the above functionality, we are using the classes \textit{DSRPolicy}, \textit{dsrredQueue}, \textit{dsrREDQueue}, \textit{QOSClass} and \textit{dsrDiff}. The relation between all these classes is shown in Figure \ref{classdiagram}. \textit{dsrDiff} class differentiates the edge router functionality and core router functionality. \textit{dsrREDQueue} class provides four physical queues and the class \textit{dsrredQueue} provides three virtual queues. \textit{DSRPolicy} class implements all the functionality of marking, metering and policing.
+
+Algorithm 7 gives the data plane operation in our protocol  
+
+\begin{algorithm} [!hbt]
+\caption{\textit{\textbf{Data plane operation}}}
+\begin{algorithmic}[1]
+\STATE $packet \leftarrow recv(dataPacket)$
+\IF     {$nodeID = packet.dest$}
+\STATE	$refreshSessionRecord(packet.src, packet.sessionID)$
+\STATE	$acceptPacket(packet)$
+\ELSIF	{$nodeID = packet.src$}
+\STATE	$path \leftarrow findroute(packet.dest, packet.src, packet.sessionID)$
+\IF	{$path \neq NULL$}
+\STATE	$packet.path \leftarrow path$
+\STATE	$mark(packet)$
+\STATE	$applyMetering(packet)$
+\STATE	$applyPolicer(packet)$
+\STATE	$enqueue(packet)$
+\ELSE
+\STATE	$getQRouteforPacket(packet)$
+\ENDIF
+\ELSE	\STATE \COMMENT {/* At intermediate nodes */}
+\STATE	$refreshSessionRecord(packet.src, packet.sessionID)$
+\STATE	$enqueue(packet)$
+%\ENDIF
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\section{Analysis of DiffQ-DSR}
+\paragraph\
+The main advantages of our scheme are
+\begin{itemize}
+\item Even though per flow state information is maintained at each node, we are providing per QoS level provisioning. So the number of meters and policers used are reduced to number of QoS levels. 
+\item Dynamic resource allocation allows arbitrary number of flows of a class of service to be supported as long as there is bandwidth available at the node rather than be restricted by the static allocation for that class. This should increase the call acceptance rate while also achieving QoS.
+\item Reduce signaling overhead by adopting a cross-layer routing protocol that carries the QoS information during route discovery. Resource reservation is also done at the time of route discovery. This is expected to result in less latency to start data-plane operations than non cross-layer schemes.
+\end{itemize}
+
+\section{ASAP\cite{asap} Porting}
+\paragraph\
+I have already explained the ASAP\cite{asap} protocol in the previous chapter. To compare the performance of our scheme with ASAP with respect to parameters like call acceptance ratio, throughput, packet delivery ratio and latency to start dataplane operations, I have ported ASAP\cite{asap} which is implemented in \textit{ns-2.27} to \textit{ns-2.29} version.  %AP: please put ns versions in italics and also a - after ns and before the version no.
+
+\paragraph*{Implementation Details}
+\paragraph\
+I describe, briefly, the implementation of ASAP as implemented in \textit{ns-2.27}. The source code for this is available on \textit{http://www.iks.inf.ethz.ch/asap}. Basically four components are implemented. Those are
+\begin{itemize}
+\item ASAP Agent for generating and processing of SR and HR messages.
+\item  Adaptation Controller for controlling the end-to-end adaptation and providing an interface to the application.
+\item Interface Queue to get separate subqueue for each flow as ASAP reserves the resources for each flow.
+\item An ASAP-aware extension of the hash classifier. Hash classifier is used to classify a packet to which flow it belongs. And it also classifies whether that packet is data packet or control packet. To differentiate ASAP signaling packet this classifier is extended.
+\end{itemize}
+
+Figure \ref{asap} shows how these components fit into the \textit{ns} %AP:ns in italics and maybe the version no? unless all versions have the same generic architecture.
+architecture.
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=.50]{figures/ASAP.eps}
+\caption{ASAP Architecture in \textit{ns}.}
+\label{asap}
+\end{figure}
+
+\paragraph\
+The node entry is the point where packets first arrive. The classifier checks for the address field of a packet to verify whether that packet is destined for the current node. If the packet is a signaling packet it is passed to the ASAP agent. If the QoS state of a flow changes due to mobility or a lot of interference in the MANET, then the ASAP agent informs the Adaptation Controller which is responsible to adapt to the current state.
+
+\pagebreak\
+\section{SWAN\cite{swan} Porting}
+\paragraph\
+SWAN\cite{swan} is a very light-weight protocol. It does not %AP:
+ reserve any resources on the path. So we want to compare our scheme with this with respect to how much QoS guarantee we are providing. Actually this is implemented in \textit{ns-2.1b9a}. So I have ported this to \textit{ns2.29} version.
+\paragraph\
+They had implemented two major components. Those are
+\begin{enumerate}
+\item SWAN admission controller agent for sending and processing of bandwidth probe requests, probe replies and regulate messages.
+\item SWAN rate controller to adjust the rate of the best-effort flows.
+\end{enumerate}
+For more implementation details refer \textit{http://comet.columbia.edu/swan/sourcecode.html}
+
+\paragraph\
+In the next chapter we present the various scenarios that we simulated and present the results of our simulation for all the three schemes - DiffQ-DSR, ASAP and SWAN. We analyze the results using our understanding of the protocols and some simple experiments we did to understand the results.

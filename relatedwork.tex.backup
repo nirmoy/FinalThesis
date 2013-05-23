@@ -1,0 +1,45 @@
+\paragraph\
+  Flow monitoring protocol like NetFlow and sFlow can provide important information about the traffic that passes
+  through a network. How ever contemporary computer networking is out-spacing out ability to monitor them efficiently.
+  As data centers are getting virtualized with virtual software switches and scaling to thousands of node it is our 
+  immediate requirement to have monitoring to that scale efficiently. There are few solution that tries to  provide 
+  some methods to have scalable flow monitoring in data centers.
+  
+  \section{EMC2\cite{emc2}}
+  EMC2 is flow collector that stay in side virtual switches in the hosts. Monitoring at server virtual switch is 
+  scalability due to its distributed nature.
+  
+  \subsection{Architecture}
+    EMC2 is a multi-threaded application that spawns parser thread for accepting sFlow/NetFlow packet. EMC2 maintains 
+    a 2-level in-memory hash table that contains flow records. Flow-ID is primary key for in-memory hash table that 
+    maps another hash table where timestamp is the key and flow record is value. Flow record contains number of packets, 
+    number of bytes and optional path vector.
+    
+    \subsection{Deduplication}
+      Deduplication avoids adding of same flow in the flow table reported by multiple Vswitch for the same flow.      
+      EMC2 uses simple heuristics to to detect duplicate flow.
+      
+     
+      \begin{algorithm}
+        \caption{Detect duplicate}
+	\label{alg1}
+	\begin{algorithmic}
+	  \IF{$flow-ID$ not exist}
+	      \STATE add flow to the flow table.
+	      \RETURN 
+	  \ELSE 
+	      \IF {Same exporter}
+		  \STATE update the flow table
+		  \RETURN 
+	      \ELSE
+	        \STATE report duplicate flow
+	        \STATE update path vector
+	        \RETURN 
+	      \ENDIF
+	  \ENDIF
+	\end{algorithmic}
+       \end{algorithm}
+    \subsection{Data Rate Prediction in Presence of Sampling}
+    EMC2  predict data rate my multiplying length of the packet with sampling rate given in flow packet.
+    It can also report low sampling rate by accumulating samples from different exported devices. 
+    

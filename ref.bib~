@@ -1,0 +1,29 @@
+@conference{emc2,
+    author    = "Vijay Mann, Anilkumar Vishnoi, Sarvesh Bidkar",
+    title     = "Living on the Edge: Monitoring  Network Flows at the Edge in Cloud Data Center",
+    booktitle = "Communication Systems and Networks (COMSNETS), 2013 Fifth International Conference",
+    %editor   = "",
+    %volume   = "",
+    %number   = "",
+    %series   = "",
+    %pages    = "",
+    %address  = "",
+    year      = "{2013}",
+    %month    = "",
+    %publisher= "",
+    %note     = "",
+}
+
+@article{TSITMAH,
+    author    = "Yeonhee Lee, Youngseok Lee",
+    title     = "Toward Scalable Internet Traffic Measurement and Analysis with Hadoop",
+    journal   = "ACM SIGCOMM Computer Communication Review (CCR)",
+    volume   = "43",
+    number   = "1",
+    pages    = "5--13",
+    year      = "2013",
+    month    = "jan",
+    %note     = "",
+}
+
+

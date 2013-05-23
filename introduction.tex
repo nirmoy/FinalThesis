@@ -1,0 +1,72 @@
+\paragraph\
+ In computer networks the goal of QoS support is to achieve a more deterministic communication behavior, so that information carried by the network can be better preserved and network resources can be better utilized. QoS is an agreement or guarantee by the network to provide prespecified service attributes to the user in terms of delay, jitter(variance of delay), available bandwidth and probability of packet loss etc. QoS is essential to support real-time applications like VoIP, video conferencing, multimedia streaming etc. The Internet is, however, best-effort and does not provide any QoS. Many QoS models have emerged in recent times to support QoS in the Internet.
+
+\section{QoS Models for Wired Networks}
+\paragraph\
+The two most popular QoS models for wired networks are
+\begin{itemize}
+\item Integrated services(Intserv).
+\item Differentiated services(Diffserv).
+\end{itemize}
+
+\subsection{Integrated Services(Intserv)}
+\paragraph\
+The Integrated services model is the first standardized QoS model for the Internet. This model provides per flow QoS granularity. It reserves resources for each flow on the path by using Resource Reservation signaling protocol(RSVP) before commencing of the flow. The signaling messages carry QoS requirements of the flows. In this model per flow state information is maintained at the nodes and this information is refreshed periodically. At every node four basic components should be implemented. Those are signaling protocol, admission control, classifier and scheduler. It is well suited for meeting the dynamically changing needs of applications but it suffers from scalability problem.
+ 
+\subsection{Differentiated Services(Diffserv)}
+\paragraph\
+ Diffserv is a fully distributed and stateless model. Instead of providing QoS at per flow granularity, Diffserv differentiates the traffic into a fixed number of classes. Diffserv aggregates a set of flows and applies a pre-defined behavior to that aggregate. So no state information for each flow is required to be maintained at any node. The network is divided into edge network and core network. The nodes at the edge of the network are responsible for classification of flows, policing them to ensure that the traffic complies with the agreement made by the service provider and marking the packets so that they can be differentiated in the core network. ToS field of the IP header is used for carrying marked codepoint. The nodes in the core network just check the codepoint of the packets and forward according to the per-hop behavior defined for that codepoint, making dataplane operations very efficient. 
+
+\paragraph\
+The raising popularity of multimedia applications among end users and the potential use of Mobile Adhoc Networks(MANETs) in civilian life have led to research interest in providing Quality of Service support in MANETs. We are also concentrated on this research area. In the following sections we discuss about MANETs and their features, what are the challenges for providing QoS in MANETs and the existing solutions and their drawbacks.
+
+\section{Mobile Adhoc Networks(MANETs)}
+\paragraph\
+A Mobile Ad hoc Network (MANET) is a collection of wireless mobile nodes dynamically forming a temporary network without the use of any existing network infrastructure or centralized administration. It is a multihop wireless communication network in which each node can either act as a host or a router. MANETs represent future generation wireless networks, capable of being deployed quickly and economically at places lacking any infrastructure. These characteristics make MANETs more suitable for defense based applications, disaster relief operations and commertial applications.
+
+\section{Challenges for Providing QoS in MANETs}
+\paragraph\
+Providing QoS in MANETs is challenging because of the following reasons:
+\begin{itemize}
+\item \textit{Dynamic network topology:} Nodes are mobile in the network. Link breaks occur due to mobility of nodes. The flows which are using these links are disturbed and latency is involved in finding a new route. It is also possible that a new route may not be found. Thus QoS can be violated for such flows.
+\item \textit{Interference and Noise:} Because of the wireless medium there is more interference and noise. Due to this packet losses may be more. So we can not guarantee QoS.
+\item \textit{Limited battery life:} Nodes are power constrained. So QoS solutions should not be too complex which consume more processing power of nodes.
+\item  \textit{Bandwidth-constrained:} Bandwidth is very limited in wireless networks. The estimation of available bandwidth is very difficult because it not only depends on admitted flows in the channel, but also on the neighborhood nodes.
+\end{itemize}
+
+\section{QoS Models for MANETs}
+\paragraph\
+All the proposed models either use Intserv or Diffserv properties and these are mainly categorized as 
+\begin{itemize}
+\item Cross-layer solutions.
+\item Independent solutions also known as frameworks.
+\end{itemize}
+
+\subsection{Cross-layer Solutions}
+\paragraph\
+QoS solutions can be provisioned at any layer in the protocol stack. Most existing schemes are at network layer. QoS-aware routing protocols will take QoS metrics as constraints to be satisfied, rather than trying to find the shortest path. Examples of these protocols are AQOR\cite{aqor}, ACOR\cite{acor}, QAODV\cite{qaodv} etc. A brief description of AQOR is presented in the next chapter.
+
+\subsection{Independent Solutions}
+\paragraph\
+Instead of adding QoS to the routing or MAC layer, these schemes define separate QoS modules for signaling, admission control and scheduling etc. The main idea behind this is to separate functionality of each module so that these are independent to the routing or MAC protocols. Examples for these schemes are INSIGINA\cite{insignia}, ASAP\cite{asap} which are per flow QoS provisioning schemes and SWAN\cite{swan}, Diffserv framework\cite{diffframe} which are per class QoS provisioning schemes. We will discuss some of these frameworks in the next chapter.
+ 
+\section{Motivation}
+\paragraph\
+From our literature survey, we find that the problems with existing QoS solutions for MANETs are
+\begin{itemize}
+\item Some are not scalable \cite{asap}, \cite{aqor}, \cite{insignia}.
+\item A few have high signaling overhead \cite{asap}, \cite{ceqmm}.
+\item There is no QoS guarantee\cite{swan}, \cite{asap}.
+\item Many of the scalable schemes use static resource allocation which leads to waste of resources if there are no flows of tat QoS level\cite{diffframe}, \cite{ceqmm}, \cite{CLAD}.
+\item Some of the schemes do not support multiple classes of services\cite{swan}, \cite{diffframe}.
+\end{itemize}
+
+\paragraph\
+So, we proposed a cross-layer QoS aware routing protocol that supports multiple classes of service. It dynamically allocates resources for each QoS class. It reserves the resources for each flow and each flow is mapped to one of the QoS classes. The number of meters, policers and queues maintained per node are restricted to number of QoS levels only. So in this way it is scalable. As it reserves resources during route discovery process, it has less signaling overhead and the latency to start data plane operations is reduced. In addition, we use Diffserv principle of marking packets at the source(which is treated as an edge router) and simply enqueueing in the right queue at the intermediate routes speeding up processing in the data plane. To evaluate the performance of our scheme, we implemented the scheme in the network simulator \textit{ns-2.29} by extending Dynamic Source Routing (DSR) protocol which is an on-demand routing protocol for MANETs. We also ported the freely available implementations ASAP and SWAN to \textit{ns-2.29} for comparison of the performance of our scheme with them.
+\paragraph\
+Our simulation results show that the objectives with which we proposed our solution like scalability, high call acceptance ratio and QoS guarantee etc. are achieved.
+
+
+\section{Organization of the Project Report}
+\paragraph\
+The rest of the project report is organized as follows: In Chapter 2, we present some of the  existing QoS solutions for MANETs with their advantages and disadvantages. In chapter 3, we present our proposal and implementation details of our proposal in network simulator \textit{ns-2.29}. Actually we have extended Dynamic Source Routing Protocol(DSR) to be QoS-aware. So in this chapter we present what are the extensions required and how we achieved them. Simulation results of our scheme, ASAP\cite{asap} and SWAN\cite{swan} are given in chapter 4. Simulation results show that our scheme performs better than ASAP and SWAN. Finally we conclude with chapter 5.

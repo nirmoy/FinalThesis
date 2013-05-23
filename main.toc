@@ -1,0 +1,7 @@
+\contentsline {chapter}{\numberline {1}Related Work}{1}
+\contentsline {paragraph}{\ }{1}
+\contentsline {section}{\numberline {1.1}EMC2\cite {emc2}}{1}
+\contentsline {subsection}{\numberline {1.1.1}Architecture}{1}
+\contentsline {subsection}{\numberline {1.1.2}Deduplication}{1}
+\contentsline {subsection}{\numberline {1.1.3}Data Rate Prediction in Presence of Sampling}{2}
+\contentsline {chapter}{Bibliography}{3}

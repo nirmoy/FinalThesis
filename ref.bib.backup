@@ -1,0 +1,199 @@
+@InProceedings{ asap,
+     author = "Jianbo Xue, Patrick Stuedi, Gustavo Alonso",
+     title  = "{ASAP: An Adaptive QoS Protocol for Mobile Ad Hoc Networks}",
+     booktitle   = "{14th IEEE Proceedings on Personal, Indoor and Mobile Radio Communications}, 2003. (PIMRC 2003)",
+     Volume = 3,
+     pages  = "2616--2620",
+     month  = "Sept",
+     year   = 2003 
+}
+@article{aqor,
+ author = {Qi Xue and Aura Ganz},
+ title = "{Ad Hoc QoS On-demand Routing (AQOR) in Mobile Ad Hoc Networks}",
+ journal = "{Journal of Parallel and Distributed Computing}",
+ volume = {63},
+ number = {2},
+ pages = {192-207},
+ year = {2003},
+ issn = {0743-7315},
+ pages = {154--165},
+ doi = {http://dx.doi.org/10.1016/S0743-7315(02)00061-8},
+ publisher = {Academic Press, Inc.},
+ address = {Orlando, FL, USA},
+ }
+@article{swan,
+author = "{Gahng-Seop Ahn, Andrew T. Campbell, Andras Veres, and Li Hsiang Sun}",
+title = "{Supporting Service Differentiation for Real-Time and Best-Effort Traffic in Stateless Wireless Ad Hoc Networks (SWAN)}",
+journal = "{IEEE Transactions on Mobile Computing}",
+volume = "1",
+number = "[3]",
+year = "{2002}",
+month = "{July-September}",
+}
+@article{diffframe,
+author = "{Venus S. Y. To, Brahim Bensaou and Sammy M. K. Chau}",
+title = "{Quality of Service Framework in MANETS using Differentiated Services}",
+journal = "{IEEE 58th Vehicular Technology Conference Proceedings} ",
+volume = "3",
+pages = "3463--3467",
+ISBN= "0-7803-7954-3",
+day= "{6-9}",
+month= "October",
+year= "2003"
+}
+@misc{ceqmm,
+author = "Hakim Badis,",
+title = "{Complete and Efficient Quality of service Model for MANETs}",
+note = "IETF internet draft,draft-badis-manet-ceqmm-02.txt",
+year = "2007",
+month = "March",
+url = "ietfreport.isoc.org/idref/draft-badis-manet-ceqmm/"
+}
+@misc{ thesis,
+author = "{Jayalakshmi Y}",
+title = " {QoS aware Routing Protocol using Diffserv Principles}",
+note = " Master Thesis, DCIS, University of Hyderabad",
+year = "2007",
+month = "June",
+}
+
+@misc{ thesis,
+author = "{Tholoana F.Masupha}",
+title = " {QoS Routing in MANETs using Diffserv Principles}",
+note = " Master Thesis, DCIS, University of Hyderabad",
+year = "2007",
+month = "June",
+}
+
+@article{insignia,
+    author = "{Seoung-Bum Lee and Gahng-Seop Ahn and Xiaowei Zhang and Andrew T. Campbell}",
+    title = "{INSIGNIA: An IP-Based Quality of Service Framework for Mobile Ad Hoc Networks}",
+    journal = "Journal of Parallel and Distributed Computing",
+    volume = "60",
+    number = "4",
+    pages = "374--406",
+    year = "2000",
+    url = "citeseer.ist.psu.edu/lee00insignia.html" }
+
+
+
+@InBook{ dsr,
+author = {D. Johnson and D. Maltz and J. Broch},
+title = {Ad Hoc Networking},
+chapter = {DSR The Dynamic Source Routing Protocol for Multihop Wireless Ad Hoc Networks},
+chapter = {5},
+pages = {139--172},
+editor = {C.E. Perkins},
+publisher = {Addison-Wesley},
+year = {2001},
+url = {citeseer.ist.psu.edu/johnson01dsr.html} }
+
+
+
+
+@misc{ qaodv,
+  author = "C. Perkins and E. Royer",
+  title = "{Quality of Service in Ad hoc On-Demand Distance Vector Routing}",
+  note= "IETF Internet Draft, draftperkins-manet-aodvqos-00.txt",
+  year = "2001",
+  month= Nov,
+  url = "citeseer.ist.psu.edu/perkins00quality.html" }
+
+
+
+@InProceedings{ clad,
+	author= "{Bosheng Zhou, Marshall A, Tsung-Han Lee}",
+	title= "{A Cross-layer Architecture for DiffServ in Mobile Ad-hoc Networks}",
+        booktitle = "{International Conference on Wireless Networks, Communications and Mobile Computing, 2005}",
+        volume = 2,
+        pages = "833--838",
+        ISBN= 0-7803-9305-8,
+	DOI= 10.1109/WIRLES.2005.1549520,
+        day= 13-16,
+       month= June,
+	year= 2005
+}
+
+	
+@misc{ haq,
+	author= "{Mohammad Haq, Masakatsu Kosuga, Jacir Bordim, Shinsuke Tanaka, Mitsuji Matsumoto}",
+	title = "{Admission Control and Service Differentiation Based QoS Provisioning for Mobile Ad hoc Network}",
+	howpublished ="{Med-Hoc-Net 2004, The Third Annual Mediterranean Ad Hoc Networking Workshop}",
+	year= "2004",
+	note= "JAPAN"
+}
+
+
+@misc{ ns2,
+	organization= "UCB/LBNL/VINT",
+	title= "{Network Simulator, ns2 version 2.29}",
+	month= oct,
+	year=2005,
+	note = "University of Southern California/LBNL/VINT,  http://www.isi.edu/nsnam/ns/index.html"
+}
+
+@TechReport{diffres,
+  author = 	 "{Dorgham Sisalem and Srikanth Krishnamurthy and Son Dao}",
+  title = 	 "{DiffRes: A reservation protocol for the differentiated  service model}",
+  institution =  {HRL Laboratories},
+  year = 	 {1999},
+  OPTkey = 	 {},
+  OPTtype = 	 {},
+  OPTnumber = 	 {},
+  address = 	 {CA, USA},
+  month = 	 {December},
+  OPTnote = 	 {},
+  OPTannote = 	 {},
+  url = {citeseer.ist.psu.edu/sisalem99diffres.html} }
+
+
+@misc{ diffserv,
+	author= "{S. Blake, D. Black, M. Carlson, E. Davies, Z. Wang, W. Weiss}",
+	title= "{An Architecture for Differentiated Services}",
+        note= "{RFC 2475, IETF DiffServ Working Group}",
+        url= " available at ftp://ftp.isi.edu/in-notesrfc2475.txt"
+}
+
+
+@ARTICLE {DSR,
+author= "Y. Hu D. B. Johnson and D. A. Maltz",
+title= {DSR-draft: The Dynamic Source Routing Protocol for Mobile Ad Hoc Netowrks},
+month= "April",
+year= 2003
+}
+
+@ARTICLE {aodv,
+	author= "{C. Perkins and S. Daas and E. Belding-Royer}",
+	title= "{\textit{RFC 3561}: Ad Hoc On-Demand Distance Vector Routing}",
+ 	publisher = {RFC Editor},
+ 	address = {United States},
+	month= "Jul",
+	year=  2003
+	}
+@article { fqmm,
+        author = {Xiao, Hannan   and Seah, W. K. G.  and Lo, A.  and Chua, K. C. },
+	citeulike-article-id = {801676},
+	journal = {Vehicular Technology Conference Proceedings, 2000. VTC 2000-Spring Tokyo. 2000 IEEE 51st},
+	pages = {445--449 vol.1},
+	title = "{A Flexible Quality of Service Model for Mobile Ad Hoc Networks}",
+	url = {http://ieeexplore.ieee.org/xpls/abs\_all.jsp?arnumber=851496},
+	volume = {1},
+	year = {2000}
+}
+@InProceedings{ QoSdiff,
+     author = "{Jaya Lakshmi Y, Anupama Potluri and Atul Negi}",
+     title  = "{QoS-aware Routing Scheme for MANETs using Diffserv Principles}",
+     booktitle   = "{proceedings of ICACC, Madurai}",
+     pages  = "99--111",
+     month  = "Feb",
+     year   = 2007
+} 
+
+
+@misc{ acor,
+	author = "{N. Kettaf, H. Abouaissa, T. Vu Duong, P. Lorenz}",
+	title = "{Admission Control enabled On demand Routing (ACOR)}",
+        note  = "IETF Internet-Draft, draft-kettaf-manet-acor-02.txt",
+        month =   April,
+	year  = 2007
+}

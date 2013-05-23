@@ -1,0 +1,16 @@
+\section{Conclusions}
+\paragraph\
+Providing QoS in MANETs is a challenging task. Many solutions have been proposed but the solutions which are using resources efficiently are not scalable and the solutions which are scalable are not using resources efficiently. So we proposed a solution to achieve both the things. The proposed solution is a cross-layer QoS-aware routing protocol that supports multiple classes of service. It allocates resources to each class dynamically. It maintains per flow state information but provides per QoS level granularity. So fewer number of meters, policers and queues are required. In our scheme the source node acts as an edge router- metering, marking and conditioning of data packets. Other nodes act as core routers. We are implemented the scheme in \textit{ns-2.29} by extending Dynamic Source Routing(DSR) protocol. We compared our scheme with ASAP and SWAN in terms of call acceptance ratio, packet delivery ratio, throughput, latency to start data plane operations and average end-to-end delay.
+
+\paragraph\
+Simulation results show that our scheme has achieved throughput close to ASAP while using fewer meters, policers and queues. Results also show that call acceptance ratio of our scheme is higher than ASAP. From the results we can also observe that our scheme gives QoS guarantee to the flows when congestion occurs whereas SWAN does not. Latency to start data plane operations is also acceptable in our scheme. Average end-to-end delay for our scheme is less than that of both ASAP and SWAN. Overall, we are performing better than ASAP and SWAN. 
+\pagebreak
+
+\section{Future Work}
+\paragraph\
+We can do some optimizations and extensions to our scheme. Those are
+\begin{itemize}
+\item \textit{Local path repairing} : Actually in our scheme whenever route break occurs, again source only will find the new route. So if intermediate nodes find the new route instead of the source, we can reduce the packet loss.
+\item Efficient measurement of available bandwidth by considering neighborhood information.
+\item Our scheme only concentrated on bandwidth provisioning. We can also extend it to delay constraint. From the results we can observe that the average end-to-end delay for our scheme is less. So if we consider delay constraint during route discovery process, we may achieve that also as already our scheme has less end-to-end delay.
+\end{itemize}
