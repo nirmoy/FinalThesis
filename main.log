@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  23 MAY 2013 23:11
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  25 MAY 2013 14:10
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -255,9 +255,7 @@ Type  H <return>  for immediate help.
                                                   
 l.60   \maketitle
                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
+? 
 [1
 
 
@@ -283,17 +281,13 @@ Type  H <return>  for immediate help.
                                                   
 l.103 \end{frontmatter}
                        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
+? 
 ! Extra \endgroup.
 <recently read> \endgroup 
                           
 l.103 \end{frontmatter}
                        
-Things are pretty mixed up, but I think the worst is over.
-
+? 
 [1
 
 ]
@@ -302,10 +296,6 @@ Chapter 1.
 File: emc2.png Graphic file (type png)
 
 <use emc2.png>
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 27--29
 
  []
@@ -335,13 +325,13 @@ sco . com / en / US / products / ps6601 /
 
 ] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 2869 strings out of 493848
- 36784 string characters out of 1152823
- 115995 words of memory out of 3000000
- 6127 multiletter control sequences out of 15000+50000
+ 2870 strings out of 493848
+ 36802 string characters out of 1152823
+ 115998 words of memory out of 3000000
+ 6128 multiletter control sequences out of 15000+50000
  10237 words of font info for 36 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 25i,8n,24p,203b,550s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 25i,8n,24p,240b,550s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12
 .pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/
 share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-
@@ -349,7 +339,7 @@ texlive/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-texlive/font
 s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/pub
 lic/amsfonts/cm/cmti12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
 s/cm/cmtt12.pfb>
-Output written on main.pdf (6 pages, 185764 bytes).
+Output written on main.pdf (6 pages, 186601 bytes).
 PDF statistics:
  50 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

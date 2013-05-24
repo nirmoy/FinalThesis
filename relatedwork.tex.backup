@@ -5,12 +5,20 @@
   immediate requirement to have monitoring system  that can scale efficiently. There are few solutions that provide 
   some methods to have scalable flow monitoring in data center networks.
   
+<<<<<<< HEAD
   \section{EMC2\cite{emc2}}
+=======
+  \section{EMC2\cite{emc2}} %expasion of EMC2 
+>>>>>>> 5272b8c6e078094066020ccd69837978eceaab53
   \paragraph\
   EMC2 is a scalable network wide monitoring service for data centers. EMC2 stays inside host computer  to monitor virtual switches.
   Monitoring at virtual switch is scalable due to its distributed nature.
   
+<<<<<<< HEAD
   \subsection{Architecture}
+=======
+  \subsection{Architecture}% what exacly happen not only level arcs in image  % modul
+>>>>>>> 5272b8c6e078094066020ccd69837978eceaab53
   \paragraph\
     EMC2 is a multi-threaded application that spawns parser thread upon accepting sFlow/NetFlow packets. EMC2 maintains 
     a 2-level in-memory hash table that contains flow records. Layer-3 source and destination address forms Flow-ID that acts as 
@@ -19,7 +27,11 @@
     \begin{figure}[h!]
       \centering
           \includegraphics[scale=.3]{emc2.png}
+<<<<<<< HEAD
           \caption{Architecture of EMC2.}
+=======
+          \caption{Architecture of EMC2.} % Give ref % label arcs % draw by urself
+>>>>>>> 5272b8c6e078094066020ccd69837978eceaab53
     \end{figure}
     
     \subsection{Deduplication}
@@ -55,8 +67,14 @@
     \subsection{Advantages and Limitations}
     Advantages of EMC2 are
     \begin{itemize}
+<<<<<<< HEAD
      \item Scalable and distributed monitoring.
      \item In-memory flow table for fast flow update.
+=======
+     \item Scalable and distributed monitoring.% no distrubuted % claimed advantages of emc2% why they claim scalable
+     \item 
+     \item In-memory flow table for fast flow update.% everybody does that.
+>>>>>>> 5272b8c6e078094066020ccd69837978eceaab53
     \end{itemize}
     Disadvantages are
     
@@ -64,3 +82,8 @@
       \item Lack of scalable storage.
       \item Centralized monitoring will be difficult as it needs to fetch from distributed flats files.
      \end{itemize}
+<<<<<<< HEAD
+=======
+
+  \section{TS}
+>>>>>>> 5272b8c6e078094066020ccd69837978eceaab53
