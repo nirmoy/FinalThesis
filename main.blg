@@ -2,66 +2,44 @@ This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 Database file #1: ref.bib.bib
-You're missing a field name---line 5 of file ref.bib.bib
- :     
- :     %editor   = "",
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-You're missing a field name---line 26 of file ref.bib.bib
- :     
- :     %note     = "",
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-You're missing a field name---line 32 of file ref.bib.bib
- :   
- :   %note = {Accessed: 2010-09-30}
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-You're missing a field name---line 38 of file ref.bib.bib
- :   
- :   %note = {Accessed: 2010-09-30}
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-Warning--empty year in emc2
-You've used 4 entries,
+You've used 5 entries,
             1876 wiz_defined-function locations,
-            497 strings with 4012 characters,
-and the built_in function-call counts, 619 in all, are:
-= -- 55
-> -- 10
+            503 strings with 4115 characters,
+and the built_in function-call counts, 820 in all, are:
+= -- 78
+> -- 22
 < -- 0
-+ -- 6
-- -- 2
-* -- 36
-:= -- 84
-add.period$ -- 4
-call.type$ -- 4
++ -- 10
+- -- 5
+* -- 51
+:= -- 110
+add.period$ -- 5
+call.type$ -- 5
 change.case$ -- 4
 chr.to.int$ -- 0
 cite$ -- 5
-duplicate$ -- 33
-empty$ -- 84
-format.name$ -- 2
-if$ -- 154
+duplicate$ -- 40
+empty$ -- 97
+format.name$ -- 5
+if$ -- 207
 int.to.chr$ -- 0
-int.to.str$ -- 4
+int.to.str$ -- 5
 missing$ -- 2
-newline$ -- 15
+newline$ -- 18
 num.names$ -- 2
-pop$ -- 22
+pop$ -- 21
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 23
+skip$ -- 34
 stack$ -- 0
-substring$ -- 19
-swap$ -- 6
+substring$ -- 31
+swap$ -- 10
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 1
-while$ -- 5
-width$ -- 5
-write$ -- 31
-(There were 4 error messages)
+warning$ -- 0
+while$ -- 7
+width$ -- 6
+write$ -- 39

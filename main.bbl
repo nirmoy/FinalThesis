@@ -1,9 +1,9 @@
 \begin{thebibliography}{1}
 
 \bibitem{emc2}
-S.~B. Vijay~Mann, Anilkumar~Vishnoi, ``Living on the edge: Monitoring network
-  flows at the edge in cloud data center,'' in {\em Communication Systems and
-  Networks (COMSNETS), 2013 Fifth International Conference}.
+V.~Mann, A.~Vishnoi, and S.~Bidkar, ``Living on the edge: Monitoring network
+  flows at the edge in cloud data centers,'' in {\em COMSNETS\/}
+  \cite{DBLP:conf/comsnets/2013}, pp.~1--9.
 
 \bibitem{NetFlow}
 ``Cisco ios netflow.''
@@ -13,9 +13,13 @@ home.html}.
 \bibitem{sFlow}
 ``sflow official site.'' \url{http://www.sflow.org}.
 
-\bibitem{TSITMAH}
-Y.~L. Yeonhee~Lee, ``Toward scalable internet traffic measurement and analysis
-  with hadoop,'' {\em ACM SIGCOMM Computer Communication Review (CCR)},
-  vol.~43, pp.~5--13, jan 2013.
+\bibitem{DBLP:conf/comsnets/2013}
+{\em Fifth International Conference on Communication Systems and Networks,
+  COMSNETS 2013, Bangalore, India, January 7-10, 2013}, IEEE, 2013.
+
+\bibitem{}
+Y.~Lee and Y.~Lee, ``Toward scalable internet traffic measurement and analysis
+  with hadoop,'' {\em SIGCOMM Comput. Commun. Rev.}, vol.~43, pp.~5--13, Jan.
+  2012.
 
 \end{thebibliography}
