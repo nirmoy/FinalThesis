@@ -9,5 +9,5 @@
 \contentsline {subsection}{\numberline {1.1.3}Data Rate Prediction in Presence of Sampling}{4}
 \contentsline {paragraph}{\ }{4}
 \contentsline {subsection}{\numberline {1.1.4}Advantages and Limitations}{4}
-\contentsline {section}{\numberline {1.2}}{4}
+\contentsline {section}{\numberline {1.2}TS}{4}
 \contentsline {chapter}{Bibliography}{5}
