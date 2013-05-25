@@ -7,6 +7,7 @@
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{geometry}
+\usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{makeidx}
@@ -26,8 +27,8 @@
   \author{A Project Report Submitted in the partial fulfillment of the \\requirements for the award of degree of \\
     \\{\Large Master of Technology}\\in\\{\Large Computer Science}\\\\\\By\\\bf{Nirmoy Das}
   \vspace*{.2in}\\
-    \includegraphics[scale=0.5]{figs/uoh.eps}\\ \\School of
-  Computer and Information  Sciences\\University of
+    %\includegraphics[scale=0.5]{figs/uoh.eps}\\ 
+    \\School of Computer and Information  Sciences\\University of
     Hyderabad\\Hyderabad, India\\ \\June, 2013 }
 \end{titlepage}
 \iffalse
@@ -119,7 +120,7 @@ University of Hyderabad\\}
 %\chapter{\label{chap:appendix} Modifications in \textit{ns-2} source code}
 %\input{appendix_mod.tex}
 \nocite{*}
-\bibliographystyle{ieeetr}
+\bibliographystyle{PhDbiblio-bold}
 \newpage
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{ref.bib}
