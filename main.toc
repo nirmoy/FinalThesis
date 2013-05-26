@@ -7,10 +7,10 @@
 \contentsline {paragraph}{\ }{2}
 \contentsline {subsubsection}{\numberline {1.1.2.1}Flow-Table}{3}
 \contentsline {paragraph}{\ }{3}
-\contentsline {subsubsection}{\numberline {1.1.2.2}NetFlowParser/sFlowParser}{4}
-\contentsline {paragraph}{\ }{4}
-\contentsline {paragraph}{Deduplication:}{4}
+\contentsline {subsubsection}{\numberline {1.1.2.2}NetFlowParser/sFlowParser}{3}
+\contentsline {paragraph}{\ }{3}
+\contentsline {paragraph}{Deduplication:}{3}
 \contentsline {paragraph}{Data Rate Prediction in Presence of Sampling:}{4}
 \contentsline {subsubsection}{\numberline {1.1.2.3}NetFlowCollector/sFlowCollector}{4}
-\contentsline {subsection}{\numberline {1.1.3}Advantages and Limitations}{5}
+\contentsline {subsection}{\numberline {1.1.3}Advantages and Limitations}{4}
 \contentsline {chapter}{Bibliography}{6}
