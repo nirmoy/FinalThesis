@@ -194,3 +194,24 @@
 	        Hadoop 2.0.0 with passive NameNodes.
 	 \item Multiple NameNodes require to get high availability\cite{ha}.
 	\end{enumerate}
+
+	
+      \section{\emph{nfdump}}
+      \paragraph\
+      \emph{nfdump} provides set of tools to capture, analysis NetFlow packets. These set of tools are 
+      \begin{enumerate}
+	\item \emph{nfcapd}
+	\item \emph{nfdump}
+	\item NfSen 
+       \end{enumerate}
+      \emph{nfcapd} reads data from the network and stores it into disk. It also rotate the file to limit size of file.
+      \emph{nfdump} allows $tcpdump$ style filter expression for processing NetFlow data stored by \emph{nfcapd}. NfSen gives 
+      graphical overview of NetFlow data using RRDTool\cite{rrd};
+        \begin{figure}[htb]
+          \centering
+          \includegraphics[scale=.35]{nfdump.png}
+          \caption{Architecture of \emph{nfdump}.} 
+	\end{figure}
+      \subsection{Advantages and Limitations}
+      \emph{nfdump} is suitable for small scale NetFlow analysis. In case of large scale NetFlow monitoring disk file 
+      based storage is not sufficient.

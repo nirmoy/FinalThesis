@@ -116,7 +116,7 @@
    \section{Scalable Internet Traffic Measurement and Analysis with Hadoop\cite{Lee}}
    \paragraph\
    Hadoop\cite{hadoop} is a distributed computing platform that uses distributed file system(HDFS) and MapReduce\cite{mapreduce} programming model. Hadoop consists of 
-   commodity hardware that can scale  hundreds of nodes to store massive data. It can perform massive data analytics operations on 
+   commodity hardware that can scale  thousands of nodes to store massive data. It can perform massive data analytics operations on 
    the available data using MapReduce. Storing NetFlow data on Hadoop and analysis using MapReduce offers scalable traffic 
    measurement and analysis.
    %Nirmoy:add images to describe Hadoop cluster and MapReduce 
@@ -146,13 +146,13 @@
 	identify packet records in HDFS block:
 	\begin{enumerate}
 	 \item Read two records using $libpcap$ 16-byte header.
-	 \item Check timestamp value, that should within duration captured time.
-	 \item Check Capture length less than  wired length of the maximum packet length.
-	 \item Check timestamp difference between two packet record within threshold. 
+	 \item Check timestamp value, that should be within duration of captured time.
+	 \item Wiredlen - caplen $\langle$ maximum packet length.
+	 \item Check whether timestamp difference between two packet records within the define threshold threshold. 
 	\end{enumerate}
 	
 	\subsubsection{Analysis in MapReduce}
-	Authors has implemented different MapReduce algorithm for IP packet as well as NetFlow packets.
+	Authors has implemented  MapReduce algorithms for processing IP packet as well as NetFlow packets.
 	Here is the list of analysis tools
 	\begin{enumerate}
 	 \item IP Layer analysis provide following analysis job
@@ -171,20 +171,36 @@
 	      \begin{enumerate}
 	       \item Human readable flow statistics.
 	       \item Aggregated flow statistics.
-	       \item Top N flows sorted by user key packet count or byte count. 
+	       \item Top N flows sorted by key such as packet count or byte count. 
 	      \end{enumerate}
 
 	\end{enumerate}
 
       \subsubsection{Interactive query interface with Hive}
-      Hive is data warehousing system build on top of Hadoop allows to generate MapReduce jobs using SQl like query.
-      IP analysis MapReduce jobs process NetFlow after every five minute that store flow record and IP statistics into
+      Hive is a data warehousing system build on the top of Hadoop that allows to generate MapReduce jobs using SQl like query.
+      IP analysis MapReduce jobs process NetFlow packets on HDFS and  store flow record and IP statistics into
       Hive tables. A user can query on Hive tables using interactive web-based user interface.
       
       \subsection{Advantages and Limitations}
       Advantages of Hadoop based traffic  measurement and analysis are 
+	\begin{enumerate}
+	  \item Scalable storage.
+	  \item MapReduce operations on flow data.
+	\end{enumerate}
+      Disadvantages of Hadoop based traffic  measurement and analysis are
+	\begin{enumerate}
+	 \item Low response time- ``the fasted MapReduce job takes 15+ seconds"\cite{mapreducetime}.
+	 \item Hadoop NameNode was a single point of failure which solved in later version of 
+	        Hadoop 2.0.0 with passive NameNodes.
+	 \item Multiple NameNodes require to get high availability\cite{ha}.
+	\end{enumerate}
+
+	
+      \section{$nfdump$}
+      \paragraph\
+      $nfdump$ provide set of tool to capture, analysis NetFlow packets. These set of tools are 
       \begin{enumerate}
-       \item Scalable storage.
-       \item MapReduce operations on flow data.
+       \item nfcapd - NetFlow capture daemon that reads netflow packets from network and store in disk.
+       \item nfdump - It reads netflow data stored by nfcapd and display netflow data with $tcpdump$-style filter.
+       \item Nfsen
       \end{enumerate}
-      

@@ -66,6 +66,12 @@
   
 }
 http://www.slideshare.net/cloudera/sf-nosql2011/58
+http://oss.oetiker.ch/rrdtool/
+@misc{rrd,
+  title = {RRDTool Home Page},
+  howpublished = {\url{http://oss.oetiker.ch/rrdtool/}},
+  
+}
 @misc{hadoop,
   title = {Apache Hadoop},
   howpublished = {\url{http://hadoop.apache.org/}},

@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{hadoop}
 {\bf Apache Hadoop}.
@@ -25,6 +25,10 @@ home.html}.
 \bibitem{mapreduce}
 {\bf Mapreduce}.
 \newblock \url{http://en.wikipedia.org/wiki/MapReduce}.
+
+\bibitem{rrd}
+{\bf RRDTool Home Page}.
+\newblock \url{http://oss.oetiker.ch/rrdtool/}.
 
 \bibitem{sFlow}
 {\bf sFlow Official Site}.

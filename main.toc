@@ -23,4 +23,7 @@
 \contentsline {subsubsection}{\numberline {1.2.1.3}Analysis in MapReduce}{5}
 \contentsline {subsubsection}{\numberline {1.2.1.4}Interactive query interface with Hive}{6}
 \contentsline {subsection}{\numberline {1.2.2}Advantages and Limitations}{6}
-\contentsline {chapter}{Bibliography}{7}
+\contentsline {section}{\numberline {1.3}\emph {nfdump}}{6}
+\contentsline {paragraph}{\ }{6}
+\contentsline {subsection}{\numberline {1.3.1}Advantages and Limitations}{7}
+\contentsline {chapter}{Bibliography}{8}
