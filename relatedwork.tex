@@ -1,10 +1,16 @@
 \paragraph\
-  Flow monitoring protocols like NetFlow\cite{NetFlow} and sFlow\cite{sFlow} can provide   important information about traffic that passes through a network. However, contemporary  networking with its 10Gbps and higher NICs is outpacing the ability to monitor them efficiently. As data 
-  centers are getting virtualized with virtual software switches and scaling to thousands  of nodes, it is an immediate requirement to have monitoring systems that can scale effectively. There are not many solutions proposed that provide scalable flow monitoring in data center networks. In this chapter, we review some of the literature that deals with scalable flow monitoring in data center networks.
+  Flow monitoring protocols like NetFlow\cite{NetFlow} and sFlow\cite{sFlow} can provide   important information about traffic that 
+  passes through a network. However, contemporary  networking with its 10Gbps and higher NICs is outpacing the ability to monitor them 
+  efficiently. As data centers are getting virtualized with virtual software switches and scaling to thousands  of nodes, 
+  it is an immediate requirement to have monitoring systems that can scale effectively. There are not many solutions proposed that 
+  provide scalable flow monitoring in data center networks. In this chapter, we review some of the literature that deals with scalable 
+  flow monitoring in data center networks.
   
   \section{Edge Monitoring and Collection for Cloud (EMC2)\cite{emc2}} 
   \paragraph\
-    Edge Monitoring and Collection for Cloud (EMC2) is a scalable network-wide monitoring service for data centers. EMC2 stays inside the host computer  to monitor virtual switches. Monitoring at virtual switch is scalable due to the distributed nature of the storage of the collected information.
+    Edge Monitoring and Collection for Cloud (EMC2) is a scalable network-wide monitoring service for data centers. 
+    EMC2 stays inside the host computer  to monitor virtual switches. Monitoring at virtual switch is scalable due to 
+    the distributed nature of the storage of the collected information.
     
   \subsection{Architecture}
     \begin{figure}[htb]
@@ -31,12 +37,14 @@
 
     \subsubsection{Flow-Table}
       \paragraph\
-	Flow-Table is a 2-level in-memory hash table. The primary key for the hash table is the Flow ID which is formed based on the layer 3 source and destination addresses. Flow ID maps to another hash table where timestamp is the key and flow record is the value. Each flow record contains number of packets, number of bytes and optional path vector.
+	Flow-Table is a 2-level in-memory hash table. The primary key for the hash table is the Flow ID which is formed based on the 
+	layer 3 source and destination addresses. Flow ID maps to another hash table where timestamp is the key and flow record is the value. Each flow record contains number of packets, number of bytes and optional path vector.
 %AP: Overuse of hyphen (-). Please do not hyphenate everything.
 
     \subsubsection{NetFlowParser/sFlowParser}
       \paragraph\
-	NetFlowCollector and sFlowCollector create these two parser threads upon receiving a NetFlow/sFlow datagram respectively. These parser threads parse the datagram and update the Flow-Table. They also perform two important tasks:
+	NetFlowCollector and sFlowCollector create these two parser threads upon receiving a NetFlow/sFlow datagram respectively. 
+	These parser threads parse the datagram and update the Flow-Table. They also perform two important tasks:
 	%AP: ``Parser threads'' is plural - hence use the plural verb ``perform'' not the singular ``performs''. Also, do not keep on saying ``Parser threads''. You can say ``They'' after the first one or two sentences. It is obvious that ``they'' refers to the preceding reference whatever that may be.
 
 	\begin{enumerate}
@@ -82,7 +90,8 @@
        \end{algorithm}
 
     \paragraph{Data Rate Prediction in Presence of Sampling:}
-       Sampling rate is specified in flow datagrams. Parser thread predicts the data rate by multiplying  sampling rate with the length of the packet.
+       Sampling rate is specified in flow datagrams. Parser thread predicts the data rate by multiplying  sampling rate with the length 
+       of the packet.
    %AP: This is not clear to me still and as I said does not convey what you told me. I will defer modification of this until I have read the paper.
    
     \subsubsection{NetFlowCollector/sFlowCollector}
@@ -93,11 +102,14 @@
     The authors state the following advantages of EMC2:
 
     \begin{itemize}
-     \item Scalable monitoring as EMC2 monitors host $vswitches$ in a distributed fashion by storing the information as flat files in those hosts itself instead of sending them to a centralized collector.
+     \item Scalable monitoring as EMC2 monitors host $vswitches$ in a distributed fashion by storing the information as flat files in
+     those hosts itself instead of sending them to a centralized collector.
      %AP: I hope the above is correct in terms of the content of the paper.
     \end{itemize}
     
-    However, flat files are not really built for scalability unlike many other distributed databases available today such as Cassandra, Big Table etc.. Therefore, it is not clear how much of performance can be obtained by storing the information in flat files in the host itself. Considering that most data centers work with SANs rather than local disks, this may not be as scalable as claimed.
+    However, flat files are not really built for scalability unlike many other distributed databases available today such as Cassandra, 
+    Big Table etc.. Therefore, it is not clear how much of performance can be obtained by storing the information in flat files in the host 
+    itself. Considering that most data centers work with SANs rather than local disks, this may not be as scalable as claimed.
     
     %AP: There is a real problem with your references. But, I will look at how you wrote your .bib file etc. on Monday.
 
@@ -107,7 +119,7 @@
    commodity hardware that can scale  hundreds of nodes to store massive data. It can perform massive data analytics operations on 
    the available data using MapReduce. Storing NetFlow data on Hadoop and analysis using MapReduce offers scalable traffic 
    measurement and analysis.
-   
+   %Nirmoy:add images to describe Hadoop cluster and MapReduce 
     \subsection{Architecture}
      Traffic measurement and analysis system with Hadoop consists of following modules
      \begin{enumerate}
@@ -119,8 +131,54 @@
 
      \subsubsection{Traffic collector}
      \paragraph\
-     Traffic collector reads trace files on the disk and writes into HDFS. Trace files contains Netflow packets or IP packets.
+     Traffic collection done using high-speed packet capture driver and load balancer. Load balancer forwards packets into
+     multiple Hadoop DataNodes evenly. Traffic collector also can reads trace files stored on the disk and writes them into HDFS. 
+     Trace files contains Netflow packets or IP packets in $libpcap$ format.
      \subsubsection{IP packet and NetFlow reader in Hadoop}
      \paragraph\
-      Storing binary trace file into Hadoop specific sequence file 
-     
+      Storing binary trace file into Hadoop specific sequence file needs more computation power as every packet has to be sequentially 
+      read from the trace file and stored into HDFS. Authors has develop new Hadoop API to store trace file directly into HDFS. 
+      As there is no distinct mark to find out end of a packet records in $libpcap$ format, authors proposed a heuristic algorithm
+      using timestamp-based bit pattern.
+
+      \paragraph{MapReduce operation on HDFS to identify packet records:}
+	MapReduce job invokes multiple map tasks to process each HDFS block in parallel. Each of the map tasks follow these steps to
+	identify packet records in HDFS block:
+	\begin{enumerate}
+	 \item Read two records using $libpcap$ 16-byte header.
+	 \item Check timestamp value, that should within duration captured time.
+	 \item Check Capture length less than  wired length of the maximum packet length.
+	 \item Check timestamp difference between two packet record within threshold. 
+	\end{enumerate}
+	
+	\subsubsection{Analysis in MapReduce}
+	Authors has implemented different MapReduce algorithm for IP packet as well as NetFlow packets.
+	Here is the list of analysis tools
+	\begin{enumerate}
+	 \item IP Layer analysis provide following analysis job
+	      \begin{enumerate}
+	       \item Host and port count statistics.
+	       \item Periodic flow statistics.
+	       \item Periodic sample traffic statistics.
+	      \end{enumerate}
+	 \item TCP layer analysis compute following statistics
+	       \begin{enumerate}
+	        \item RTT.
+	        \item Retransmission.
+	        \item Throughput.
+	       \end{enumerate}
+	\item NetFlow analysis provides 
+	      \begin{enumerate}
+	       \item Human readable flow statistics.
+	       \item Aggregated flow statistics.
+	       \item Top N flows sorted by user key packet count or byte count. 
+	      \end{enumerate}
+
+	\end{enumerate}
+
+      \subsubsection{Interactive query interface with Hive}
+      Hive is data warehousing system build on top of Hadoop allows to generate MapReduce jobs using SQl like query.
+      IP analysis MapReduce jobs process NetFlow after every five minute that store flow record and IP statistics into
+      Hive tables. A user can query on Hive tables using interactive web-based user interface.
+      
+      \subsection{Advantages and Limitations}
