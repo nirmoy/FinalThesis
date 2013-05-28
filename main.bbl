@@ -1,18 +1,34 @@
 \begin{thebibliography}{1}
 
+\bibitem{hadoop}
+{\bf Apache Hadoop}.
+\newblock \url{http://hadoop.apache.org/}.
+
+\bibitem{mapreducetime}
+{\bf Apache Hadoop and Hbase}.
+\newblock \url{http://www.slideshare.net/cloudera/sf-nosql2011/58}.
+
+\bibitem{ha}
+{\bf Apache Hadoop and Hbase}.
+\newblock \url{http://www.slideshare.net/cloudera/sf-nosql2011/58}.
+
+\bibitem{hive}
+{\bf Apache Hive}.
+\newblock \url{http://hive.apache.org/}.
+
 \bibitem{NetFlow}
 {\bf Cisco IOS NetFlow}.
 \newblock
   \url{http://www.cisco.com/en/US/products/ps6601/products_ios_protocol_group_%
 home.html}.
 
+\bibitem{mapreduce}
+{\bf Mapreduce}.
+\newblock \url{http://en.wikipedia.org/wiki/MapReduce}.
+
 \bibitem{sFlow}
 {\bf sFlow Official Site}.
 \newblock \url{http://www.sflow.org}.
-
-\bibitem{DBLP:conf/comsnets/2013}
-{\em Fifth International Conference on Communication Systems and Networks,
-  COMSNETS 2013, Bangalore, India, January 7-10, 2013}. IEEE, 2013.
 
 \bibitem{Lee}
 {\sc Yeonhee Lee and Youngseok Lee}.
@@ -24,6 +40,7 @@ home.html}.
 {\sc Vijay Mann, Anilkumar Vishnoi, and Sarvesh Bidkar}.
 \newblock {\bf Living on the edge: Monitoring network flows at the edge in
   cloud data centers}.
-\newblock In {\em COMSNETS\/} \cite{DBLP:conf/comsnets/2013}, pages 1--9.
+\newblock In {\em Fifth International Conference on Communication Systems and
+  Networks, COMSNETS 2013}, 2013.
 
 \end{thebibliography}
