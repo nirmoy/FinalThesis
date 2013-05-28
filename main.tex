@@ -7,7 +7,6 @@
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{geometry}
-\usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{makeidx}
@@ -23,15 +22,17 @@
 %\textheight 9in
 
 \begin{titlepage}
- \title{\bfseries\huge Scalable Flow Monitoring for Data Center Network }
-  \author{A Project Report Submitted in the partial fulfillment of the \\requirements for the award of degree of \\
-    \\{\Large Master of Technology}\\in\\{\Large Computer Science}\\\\\\By\\\bf{Nirmoy Das}
+ \title{\bfseries\huge TITLE}
+  \author{A Dissertation Submitted in partial fulfillment of the degree of \\
+    \\{\Large Master of Technology}\\in\\{\Large Computer Science}\\\\\\By\\\bf{STUDENT NAME}
   \vspace*{.2in}\\
-    %\includegraphics[scale=0.5]{figs/uoh.eps}\\ 
-    \\School of Computer and Information  Sciences\\University of
-    Hyderabad\\Hyderabad, India\\ \\June, 2013 }
+    \includegraphics[scale=0.5]{uoh.eps}\\ \\
+	School of Computer and Information  Sciences\\
+	University of Hyderabad, Gachibowli\\ 
+	Hyderabad - 500046, India\\ \\
+	Month, Year }
 \end{titlepage}
-\iffalse
+
 \date{}
 
 \renewenvironment{frontmatter}{\pagenumbering{roman}}{\newpage
@@ -54,53 +55,72 @@
   \markboth{#1}{#1}}
 \newenvironment{abstract}{\null\vfil\prefacesection{Abstract}}{\par\vfill\null}
 \newenvironment{acknowledgments}{\null\vfil\prefacesection{Acknowledgments}}{\par\vfill\null}
-\fi
 
 \begin{document}
 %\begin{large}
   \maketitle
  \onehalfspacing
-\iffalse
 
- \begin{frontmatter}
 
-    {%certificate
-     \thispagestyle{empty}
-\begin{center} \textbf{\large CERTIFICATE}  \end{center}\vspace{.75in}
-{\sloppy This is to certify that the project work entitled ``\textbf{Scalable Flow Monitoring for Data Center Network}'' being
-    submitted to University of Hyderabad by \textbf{\mbox{Nirmoy Das}}
-    (Reg. No. 11MCMT20), in partial fulfillment for the award of the degree of
-    Master of Technology in Computer Science, is a bona fide work
-    carried out by her under my supervision.}\\ \\ \\ \\ \\ \\
+\begin{frontmatter}
+	{%certificate
+	\thispagestyle{empty}
+	\begin{center} 
+		\includegraphics[scale=0.5]{uoh.eps}
+		\textbf{\Large CERTIFICATE}  
+	\end{center}\vspace{.75in}
 
-\parbox[t]{3in}{\flushleft Ms. Anupama Potluri\\
-Project Supervisor,\\
-School of CIS,\\
-University of Hyderabad\\}
+	{\sloppy This is to certify that the dissertation entitled ``\textbf{TITLE}'' 
+    	submitted by \textbf{\mbox{STUDENT NAME}} bearing Reg. No. XXXXXXX, in partial fulfillment of the requirements for the award of Master of Technology in Computer Science, is a bona fide work carried out by him/her under my/our supervision and guidance.
 
-\vspace{1.5in}
-\parbox[t]{3in}{\flushleft 
-Dean ,\\
-School of CIS,\\
-University of Hyderabad\\}
-}
-\fi	
-%    \begin{dedication}
- %   \thispagestyle{empty}
-  %    My Parents and Supervisor.
-   % \end{dedication}
+	The dissertation has not been submitted previously in part or in full to this or any other University or Institution for the award of any degree or diploma. }\\ 
+
+	\vspace{0.5in}
+%	\parbox[t]{3in}
+	{\flushright FACULTY NAME\\
+	School of Computer and Information Sciences,\\
+	University of Hyderabad\\}
+
+	\vspace{1.0in}
+%	\parbox[t]{3in}
+	{\flushright Dean,\\
+	School of Computer and Information Sciences,\\
+	University of Hyderabad\\}
+	}
+
+\newpage
+	{%declaration
+	\thispagestyle{empty}
+	\begin{center} 
+		\textbf{\large DECLARATION}  
+	\end{center}\vspace{.75in}
+
+	{\sloppy I, \textbf{\mbox{NAME OF THE STUDENT}} hereby declare that this dissertation entitled ``\textbf{TITLE}'' submitted by me under the guidance and supervision of Professor/Dr. FACULTY NAME is a bona fide work. I also declare that it has not been submitted previously in part or in full to this or any other University or Institution for the award of any degree or diploma. }\\ \\ \\ \\ \\ \\
+
+	{\flushleft Date:   } 
+	{\flushright STUDENT NAME\\
+	Reg. No.: XXXXXXXX\\
+	\vspace{0.5in}
+	Signature of the Student\\
+	}
+	}
+
+    	\begin{dedication}
+    	\thispagestyle{empty}
+      		My Parents and Supervisor.
+    	\end{dedication}
     
- %   \begin{acknowledgments}
- %     \input{ack.tex}
-%    \end{acknowledgments}
+    	%\begin{acknowledgments}
+      	%\input{ack.tex}
+    	%\end{acknowledgments}
     
-%   \begin{abstract}
-%      \input{abstract.tex}
-%    \end{abstract}
+    	%\begin{abstract}
+      	%\input{abstract.tex}
+    	%\end{abstract}
     
-    \tableofcontents
-%    \listoffigures
- %   \listoftables
+    	\tableofcontents
+    	\listoffigures
+    	\listoftables
 \end{frontmatter}
   
 %\renewcommand{\baselinestretch}{1.7}

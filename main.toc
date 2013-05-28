@@ -1,16 +1,22 @@
-\contentsline {chapter}{\numberline {1}Related Work}{2}
+\contentsline {chapter}{\numberline {1}Related Work}{1}
+\contentsline {paragraph}{\ }{1}
+\contentsline {section}{\numberline {1.1}Edge Monitoring and Collection for Cloud (EMC2)\cite {emc2}}{1}
+\contentsline {paragraph}{\ }{1}
+\contentsline {subsection}{\numberline {1.1.1}Architecture}{1}
+\contentsline {paragraph}{\ }{1}
+\contentsline {subsubsection}{\numberline {1.1.1.1}Flow-Table}{2}
 \contentsline {paragraph}{\ }{2}
-\contentsline {section}{\numberline {1.1}EMC2\cite {emc2}}{2}
-\contentsline {paragraph}{\ }{2}
-\contentsline {subsection}{\numberline {1.1.1}Architecture}{2}
-\contentsline {subsection}{\numberline {1.1.2}Modules}{2}
-\contentsline {paragraph}{\ }{2}
-\contentsline {subsubsection}{\numberline {1.1.2.1}Flow-Table}{3}
-\contentsline {paragraph}{\ }{3}
-\contentsline {subsubsection}{\numberline {1.1.2.2}NetFlowParser/sFlowParser}{3}
+\contentsline {subsubsection}{\numberline {1.1.1.2}NetFlowParser/sFlowParser}{3}
 \contentsline {paragraph}{\ }{3}
 \contentsline {paragraph}{Deduplication:}{3}
-\contentsline {paragraph}{Data Rate Prediction in Presence of Sampling:}{4}
-\contentsline {subsubsection}{\numberline {1.1.2.3}NetFlowCollector/sFlowCollector}{4}
-\contentsline {subsection}{\numberline {1.1.3}Advantages and Limitations}{4}
+\contentsline {paragraph}{Data Rate Prediction in Presence of Sampling:}{3}
+\contentsline {subsubsection}{\numberline {1.1.1.3}NetFlowCollector/sFlowCollector}{3}
+\contentsline {subsection}{\numberline {1.1.2}Advantages and Limitations}{4}
+\contentsline {section}{\numberline {1.2}Scalable Internet Traffic Measurement and Analysis with Hadoop\cite {Lee}}{4}
+\contentsline {paragraph}{\ }{4}
+\contentsline {subsection}{\numberline {1.2.1}Architecture}{4}
+\contentsline {subsubsection}{\numberline {1.2.1.1}Traffic collector}{4}
+\contentsline {paragraph}{\ }{4}
+\contentsline {subsubsection}{\numberline {1.2.1.2}IP packet and NetFlow reader in Hadoop}{5}
+\contentsline {paragraph}{\ }{5}
 \contentsline {chapter}{Bibliography}{6}

@@ -1,57 +1,55 @@
 \paragraph\
-  Flow monitoring protocols like NetFlow\cite{NetFlow} and sFlow\cite{sFlow} can provide   important information about traffic that passes through a network. However contemporary  computer networking is out-spacing out ability to monitor them efficiently. As data 
-  centers are getting virtualized with virtual software switches and scaling to thousands  of node, it is our immediate requirement to have monitoring system  that can scale 
-  efficiently. There are few solutions that provide some methods to have scalable flow 
-  monitoring in data center networks.
+  Flow monitoring protocols like NetFlow\cite{NetFlow} and sFlow\cite{sFlow} can provide   important information about traffic that passes through a network. However, contemporary  networking with its 10Gbps and higher NICs is outpacing the ability to monitor them efficiently. As data 
+  centers are getting virtualized with virtual software switches and scaling to thousands  of nodes, it is an immediate requirement to have monitoring systems that can scale effectively. There are not many solutions proposed that provide scalable flow monitoring in data center networks. In this chapter, we review some of the literature that deals with scalable flow monitoring in data center networks.
   
-  \section{EMC2\cite{emc2}} 
+  \section{Edge Monitoring and Collection for Cloud (EMC2)\cite{emc2}} 
   \paragraph\
-    Edge Monitoring and Collection for Cloud (EMC2) is a scalable network 
-    wide monitoring service for data centers. EMC2 stays inside host computer  to monitor
-    virtual switches. Monitoring at virtual switch is scalable due to its 
-    distributed nature.
+    Edge Monitoring and Collection for Cloud (EMC2) is a scalable network-wide monitoring service for data centers. EMC2 stays inside the host computer  to monitor virtual switches. Monitoring at virtual switch is scalable due to the distributed nature of the storage of the collected information.
     
   \subsection{Architecture}
-    Figure 1.1 shows the architecture of EMC2.
     \begin{figure}[htb]
           \centering
-          \includegraphics[scale=1]{emc2.png}
+          \includegraphics[scale=.35]{emc2.png}
           \caption{Architecture of EMC2.} 
     \end{figure}
     
-  \subsection{Modules}
-  \paragraph\
-    EMC2 is a multi-threaded application that contains following modules
-    \begin{itemize}
-     \item Flow-Table : Flow-Table is in-memory 2-level hash table.
-     \item NetFlowParser : It parse NetFlow datagrams and update Flow-Table.
-     \item sFlowParser : Its parse sFlow datagrams and update Flow-Table.
-     \item NetFlowCollector : It accept NetFlow datagrams and create parser thread upon receiving NetFlow datagrams.
-     \item sFlowCollector : It does the same task like NetFlowCollector for sFlow datagrams.
-     \item FlowCollector : It invoke two thread, NetFlowCollector and sFlowCollector for accepting flow datagrams.
-     
-    \end{itemize}
+    Figure 1.1 shows the architecture of EMC2.
+
+    \paragraph\
+    EMC2 is a multi-threaded application that contains the following modules:
+    \begin{enumerate}
+     \item Flow-Table : Flow-Table is an in-memory 2-level hash table.
+     \item NetFlowParser : It parses the NetFlow datagrams and updates the Flow-Table.
+     %AP: ``It'' is a singular pronoun. Should be associated with a singular verb ``parses'' not the plural verb ``parse''. Similarly ``updates'' and not ``update''. They update, it updates, she updaes, he updates and so on. Please use the proper singular noun/pronoun and verb combinations.
+     \item sFlowParser : It parses the sFlow datagrams and updates the Flow-Table.
+     %AP: Missing articles: you need to say ``the sFlow'' and ``the Flow-Table'' since you are talking about a specific entity. If you are talking in general, then you need to use the article ``a'' or ``an'' depending on whether the word starts with a consonant or a vowel resp.
+     \item NetFlowCollector : It accepts the NetFlow datagrams and creates the parser thread upon receiving NetFlow datagrams.
+     \item sFlowCollector : It does the same task like the NetFlowCollector but for sFlow datagrams.
+     \item FlowCollector : It invokes two thread -- NetFlowCollector and sFlowCollector -- for accepting flow datagrams.
+  \end{enumerate}
 
 
     \subsubsection{Flow-Table}
       \paragraph\
-	Flow-Table is a 2-level in-memory hash table. Layer-3 source and destination address forms Flow-ID that acts as 
-	primary key for in-memory hash table. Flow-ID maps to another hash table where timestamp is the key and flow 
-	record is value. Flow record contains number of packets, number of bytes and optional path vector.
- 
+	Flow-Table is a 2-level in-memory hash table. The primary key for the hash table is the Flow ID which is formed based on the layer 3 source and destination addresses. Flow ID maps to another hash table where timestamp is the key and flow record is the value. Each flow record contains number of packets, number of bytes and optional path vector.
+%AP: Overuse of hyphen (-). Please do not hyphenate everything.
+
     \subsubsection{NetFlowParser/sFlowParser}
       \paragraph\
-	NetFlowCollector/sFlowCollector creates these two parser threads upon receiving a NetFlow/sFlow datagram.
-	Parser threads parse the datagram and update the Flow-Table. Parser threads also performs two important
-	tasks:
+	NetFlowCollector and sFlowCollector create these two parser threads upon receiving a NetFlow/sFlow datagram respectively. These parser threads parse the datagram and update the Flow-Table. They also perform two important tasks:
+	%AP: ``Parser threads'' is plural - hence use the plural verb ``perform'' not the singular ``performs''. Also, do not keep on saying ``Parser threads''. You can say ``They'' after the first one or two sentences. It is obvious that ``they'' refers to the preceding reference whatever that may be.
 
-	\begin{itemize}
+	\begin{enumerate}
 	 \item Deduplication.
 	 \item Data rate prediction in presence of sampling.
-	\end{itemize}
+	\end{enumerate}
+   %AP: Use enumerate wherever possible as it gives you numbering. Bullets are used in more special cases such as primarily in slides etc.
    
    \paragraph{Deduplication:}
-       Deduplication avoids duplicate flow records to be added in Flow-Table. It uses the following algorithm.
+       Deduplication prevents duplicate flow records from being added to the Flow-Table. 
+       %AP: Please see how I have modified the above sentence from what you had written.
+       It uses the following algorithm.
+       
        
      \begin{algorithm}[H]
         \caption{Detect Duplicate Flow}
@@ -84,25 +82,45 @@
        \end{algorithm}
 
     \paragraph{Data Rate Prediction in Presence of Sampling:}
-       Sampling rate is specified in flow datagrams. Parser thread predict data rate by multiplying  sampling
-       rate with length of the packet.
-    
+       Sampling rate is specified in flow datagrams. Parser thread predicts the data rate by multiplying  sampling rate with the length of the packet.
+   %AP: This is not clear to me still and as I said does not convey what you told me. I will defer modification of this until I have read the paper.
+   
     \subsubsection{NetFlowCollector/sFlowCollector}
-      NetFlowCollector/sFlowCollector are collector thread that waits for new NetFlow or sFlow datagrams and
-      spawn a new NetFlowParser/sFlowParser thread upon receiving a datagram.
+      NetFlowCollector/sFlowCollector are collector thread that wait %(AP: wait not waits)
+      for new NetFlow or sFlow datagrams and spawn a new NetFlowParser/sFlowParser thread upon receiving a datagram.
       
     \subsection{Advantages and Limitations}
-    Claimed Advantages of EMC2 
+    The authors state the following advantages of EMC2:
 
     \begin{itemize}
-     \item Scalable monitoring as EMC2 monitors host Vswitches which are distributed in nature. 
+     \item Scalable monitoring as EMC2 monitors host $vswitches$ in a distributed fashion by storing the information as flat files in those hosts itself instead of sending them to a centralized collector.
+     %AP: I hope the above is correct in terms of the content of the paper.
     \end{itemize}
     
-    Disadvantages are
+    However, flat files are not really built for scalability unlike many other distributed databases available today such as Cassandra, Big Table etc.. Therefore, it is not clear how much of performance can be obtained by storing the information in flat files in the host itself. Considering that most data centers work with SANs rather than local disks, this may not be as scalable as claimed.
     
-     \begin{itemize}
-      \item Lack of scalable storage.
-      \item Centralized monitoring will be difficult as it requires to fetch from distributed flats files.
-     \end{itemize}
+    %AP: There is a real problem with your references. But, I will look at how you wrote your .bib file etc. on Monday.
+
    \section{Scalable Internet Traffic Measurement and Analysis with Hadoop\cite{Lee}}
+   \paragraph\
+   Hadoop is a distributed computing platform that uses distributed file system(HDFS) and MapReduce programming model. Hadoop consists of 
+   commodity hardware that can scale  hundreds of nodes to store massive data. It can perform massive data analytics operations on 
+   the available data using MapReduce. Storing NetFlow data on Hadoop and analysis using MapReduce offers scalable traffic 
+   measurement and analysis.
    
+    \subsection{Architecture}
+     Traffic measurement and analysis system with Hadoop consists of following modules
+     \begin{enumerate}
+      \item Traffic collector.
+      \item IP packet and NetFlow reader in Hadoop.
+      \item Analysis in MapReduce.
+      \item Interactive query interface with Hive.
+     \end{enumerate}
+
+     \subsubsection{Traffic collector}
+     \paragraph\
+     Traffic collector reads trace files on the disk and writes into HDFS. Trace files contains Netflow packets or IP packets.
+     \subsubsection{IP packet and NetFlow reader in Hadoop}
+     \paragraph\
+      Storing binary trace file into Hadoop specific sequence file 
+     
