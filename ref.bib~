@@ -36,7 +36,11 @@
   howpublished = {\url{http://nfdump.sourceforge.net/}},
   
 }
-
+@misc{cassathpt,
+  title = {Cassandra Performance Review},
+  howpublished = {\url{http://www.datastax.com/dev/blog/2012-in-review-performance}},
+  
+}
 
 @misc{ha,
   title = {Apache Hadoop and Hbase},
@@ -71,6 +75,12 @@ http://oss.oetiker.ch/rrdtool/
 @misc{rrd,
   title = {RRDTool Home Page},
   howpublished = {\url{http://oss.oetiker.ch/rrdtool/}},
+  
+}
+
+@misc{rrdcluster,
+  title = {Redis Cluster},
+  howpublished = {\url{http://redis.io/topics/cluster-spec}},
   
 }
 @misc{hadoop,

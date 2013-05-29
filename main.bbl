@@ -12,6 +12,10 @@
 {\bf Apache Hive}.
 \newblock \url{http://hive.apache.org/}.
 
+\bibitem{cassathpt}
+{\bf Cassandra Performance Review}.
+\newblock \url{http://www.datastax.com/dev/blog/2012-in-review-performance}.
+
 \bibitem{NetFlow}
 {\bf Cisco IOS NetFlow}.
 \newblock
@@ -25,6 +29,10 @@ home.html}.
 \bibitem{nfdump}
 {\bf nfdump Home Page}.
 \newblock \url{http://nfdump.sourceforge.net/}.
+
+\bibitem{rrdcluster}
+{\bf Redis Cluster}.
+\newblock \url{http://redis.io/topics/cluster-spec}.
 
 \bibitem{rrd}
 {\bf RRDTool Home Page}.

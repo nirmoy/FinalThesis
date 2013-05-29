@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  29 MAY 2013 12:59
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  29 MAY 2013 16:10
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -404,67 +404,24 @@ File: ntoparc.jpg Graphic file (type jpg)
  <use ntoparc.jpg>
 [9
 
-] [10 <./ntoparc.jpg>]
-! Undefined control sequence.
-<recently read> \toprule 
-                         
-l.68 	\toprule
-              
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+] [10 <./ntoparc.jpg>] [11] <cassathpt.png, id=73, 602.25pt x 322.20375pt>
+File: cassathpt.png Graphic file (type png)
 
-! Misplaced \noalign.
-\hline ->\noalign 
-                  {\ifnum 0=`}\fi \hrule \@height \arrayrulewidth \futurelet...
-l.69 ...ated& Time & Size of generated data \hline
-                                                   \\
-I expect to see \noalign only after the \cr of
-an alignment. Proceed, and I'll ignore this case.
+<use cassathpt.png>) [12 <./cassathpt.png>] (./main.bbl [13
 
-! You can't use `\hrule' here except with leaders.
-\hline ->\noalign {\ifnum 0=`}\fi \hrule 
-                                         \@height \arrayrulewidth \futurelet...
-l.69 ...ated& Time & Size of generated data \hline
-                                                   \\
-To put a horizontal rule in an hbox or an alignment,
-you should use \leaders or \hrulefill (see The TeXbook).
-
-! Missing number, treated as zero.
-<to be read again> 
-                   \futurelet 
-l.69 ...ated& Time & Size of generated data \hline
-                                                   \\
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-! Illegal unit of measure (pt inserted).
-<to be read again> 
-                   \futurelet 
-l.69 ...ated& Time & Size of generated data \hline
-                                                   \\
-Dimensions can be in units of em, ex, in, pt, pc,
-cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
-I'll assume that you meant to say pt, for printer's points.
-To recover gracefully from this error, it's best to
-delete the erroneous units; e.g., type `2' to delete
-two letters. (See Chapter 27 of The TeXbook.)
-
-) [11] (./main.bbl [12
-
-]) [13] (./main.aux)
+]) [14] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 2920 strings out of 493848
- 37323 string characters out of 1152823
- 118151 words of memory out of 3000000
- 6164 multiletter control sequences out of 15000+50000
+ 2926 strings out of 493848
+ 37423 string characters out of 1152823
+ 118159 words of memory out of 3000000
+ 6169 multiletter control sequences out of 15000+50000
  11967 words of font info for 41 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  25i,8n,24p,425b,554s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -477,9 +434,9 @@ ts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl12
 .pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
 share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf
 -texlive/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on main.pdf (21 pages, 408311 bytes).
+Output written on main.pdf (22 pages, 459999 bytes).
 PDF statistics:
- 113 PDF objects out of 1000 (max. 8388607)
+ 119 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
