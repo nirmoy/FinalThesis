@@ -1,51 +1,30 @@
-\documentclass[12 pt , a4paper ]{report}
-\usepackage{graphicx}
-\DeclareGraphicsExtensions{.pdf,.png,.odg,.jpg}
-
-\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
-
-\usepackage{makeidx}
-\usepackage{latexsym}
-\usepackage{amssymb}
-\usepackage[mathcal]{euscript}
-\newcommand{\university}{\large{\bf University of Hyderabad}}
-\newcommand{\projectname}{API Documentation of Cassandra C Client}
-
-\newcommand{\department}{\large{\bf{Department of Computer and Information Sciences}}}
-\makeindex
-
-\begin{document}
-
-\title{\bf{ High Level Design Document \\ For\\ \bf{\projectname} \\ \documentversion }
-\author{Nirmoy Das \\ \\ {\bf{Advisor:}} \large{Anupama Potluri} \date{\today} \\ \\ \\ \department \\ \university }}
-%\maketitle
-\tableofcontents
-\chapter{API Documentation of Cassandra C Client}
-\section{Introduction}
-\includegraphics[scale=0.3]{arch.jpg}
+  \paragraph\
+      Cassandra C client is a wrapper around Cassandra Python client that is Pycassa. I used C-Python API
+      to write wrapper around Python's Pycassa API. 
+  \includegraphics[scale=0.3]{C_client.eps}
 
  
-\section{API Clasification} 
+\subsection{API Clasification} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Utilities APIs} 
+\subsection{Utilities APIs} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
  \begin{tabular}{p{7cm}}
-  \cellcolor{blue!25}{\bf Utilities APIs } \\
-  \cellcolor{blue!25}
+  {\bf Utilities APIs } \\
+  
 \begin{enumerate}
-\item isExistPycassa()
+   \item isExistPycassa()
    \item isExistKeyspace()
    \item isExistColumnfamily()
 
    \end{enumerate} 
  \end{tabular}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{isExistPycassa()}
+\subsubsection{isExistPycassa()}
 \begin{verbatim}
 int isExistPycassa(void);
 \end{verbatim}
@@ -63,7 +42,7 @@ int isExistPycassa(void);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{isExistKeyspace()}
+\subsubsection{isExistKeyspace()}
 \begin{verbatim}
 int isExistKeyspace(char *keyspace, char *server);
 \end{verbatim}
@@ -84,7 +63,7 @@ int isExistKeyspace(char *keyspace, char *server);
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{isExistColumnfamily()}
+\subsubsection{isExistColumnfamily()}
 \begin{verbatim}
 int isExistColumnfamily(char *keyspace, char *columnfamily, char *server);
 \end{verbatim}
@@ -109,12 +88,12 @@ int isExistColumnfamily(char *keyspace, char *columnfamily, char *server);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Schema Manager APIs} 
+\subsection{Schema Manager APIs} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tabular}{ p{7cm} }
- \cellcolor{blue!30}{\bf Schema Manager APIs}\\
-  \cellcolor{blue!30}
+ {\bf Schema Manager APIs}\\
+  
 \begin{enumerate}
    \item cassandraCreateKeyspace()
    \item cassandraCreateColumnFamily()
@@ -123,7 +102,7 @@ int isExistColumnfamily(char *keyspace, char *columnfamily, char *server);
    \end{enumerate} \\
 
 \end{tabular}
-\subsection{cassandraCreateKeyspace()}
+\subsubsection{cassandraCreateKeyspace()}
 \begin{verbatim}
  int cassandraCreateKeyspace(char *keyspace, char *strategy, int rf, 
                              char *server);
@@ -153,7 +132,7 @@ int isExistColumnfamily(char *keyspace, char *columnfamily, char *server);
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{cassandraCreateColumnFamily()}
+\subsubsection{cassandraCreateColumnFamily()}
 \begin{verbatim}
  int cassandraCreateColumnFamily(char *keyspace, char *columnfamily,
                                  char *comparator, char *server);
@@ -193,7 +172,7 @@ int isExistColumnfamily(char *keyspace, char *columnfamily, char *server);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{cassandraDropColumnFamily()}
+\subsubsection{cassandraDropColumnFamily()}
 \begin{verbatim}
 int cassandraDropColumnFamily(char *keyspace, char *columnfamily, char *server);
 \end{verbatim}
@@ -215,7 +194,7 @@ int cassandraDropColumnFamily(char *keyspace, char *columnfamily, char *server);
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{cassandraDropKeyspace()}
+\subsubsection{cassandraDropKeyspace()}
 \begin{verbatim}
 int cassandraDropKeyspace(char *keyspace, char *server);
 \end{verbatim}
@@ -236,14 +215,14 @@ int cassandraDropKeyspace(char *keyspace, char *server);
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Data Operation APIs} 
+\subsection{Data Operation APIs} 
 \paragraph{}These APIs allows  manipulation of data in Cassandra.
 
 \begin{tabular}{ p{7cm} }
 
-    \cellcolor{blue!40}{\bf Data Operation APIs}     \\
+    {\bf Data Operation APIs}     \\
  
-\cellcolor{blue!40}
+
 \begin{enumerate}
 \item cassandraConnect()
    \item cassandraInsert()
@@ -261,7 +240,7 @@ int cassandraDropKeyspace(char *keyspace, char *server);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{cassandraConnect()}
+\subsubsection{cassandraConnect()}
 \begin{verbatim}
  int cassandraConnect(char *keyspace, char *columnfamily, char *server);
 \end{verbatim}
@@ -283,7 +262,7 @@ int cassandraDropKeyspace(char *keyspace, char *server);
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{cassandraInsert()}
+\subsubsection{cassandraInsert()}
 \begin{verbatim}
  int cassandraInsert (int cfDesc, char *key, char *value, char *columnName, ...);
 \end{verbatim}
@@ -306,7 +285,7 @@ int cassandraDropKeyspace(char *keyspace, char *server);
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{cassandraGet()}
+\subsubsection{cassandraGet()}
 \begin{verbatim}
  result_t * cassandraGet (int cfDesc, char *rowkey, char *colStart, 
                           char *colEnd, int colCount);
@@ -325,13 +304,13 @@ int cassandraDropKeyspace(char *keyspace, char *server);
 
  \paragraph{Return Value:}
  It returns a array of key-value pair.
-\begin{enumerate}
+  \begin{enumerate}
  \item On Success : result\_t *.
  \item On Error   : NULL.
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{cassandraGetItem()}
+\subsubsection{cassandraGetItem()}
 \begin{verbatim}
  int cassandraGetItem( result_t *, int position, char *colName, 
                        char *colValue);
@@ -362,16 +341,16 @@ int cassandraDropKeyspace(char *keyspace, char *server);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Modifications Made on \emph{ntop} }
+\section{Modifications Made on \emph{ntop} }
 
-\section{\emph{ntop} Plugin Structure}
+\subsection{\emph{ntop} Plugin Structure}
 \emph{ntop} uses  shared objects technology to provide plug-in, 
 that allows dynamic linking of compiled shared objects  to \emph{ntop} to add extra features. \\ \\
 
 \textbf{\emph{ntop} support following API for plug-in support:}\\ \\
 \begin{tabular}{|l|l|}
 \hline
-\cellcolor{blue!40} \textbf{API name} & \cellcolor{blue!40} \textbf{Details}\\
+ \textbf{API name} &  \textbf{Details}\\
 \hline
  int(*IntFunct)(void); & Called at initialization of the plug-in.\\
  \hline
@@ -380,7 +359,7 @@ that allows dynamic linking of compiled shared objects  to \emph{ntop} to add ex
  void(*PluginHTTPFunct)(char* url); & HTTP request handler function.\\
  \hline
 \end{tabular}
-\section{Changes Made}
+\subsection{Changes Made}
 \paragraph{Added files:}
 \begin{enumerate}
  \item ntop/plugins/cassandraPlugin.c
@@ -389,15 +368,14 @@ that allows dynamic linking of compiled shared objects  to \emph{ntop} to add ex
 \paragraph{Modified files:}
 \begin{enumerate}
  \item ntop/plugins/Makefile.am
- \item ntop/util.c
- \item ntop/globals-core.h
+ \item ntop/python.c
 \end{enumerate}
 
 \textbf{APIs for Cassandra Plug-in}\\
 
 \begin{tabular}{|l|l|}
 \hline
-\cellcolor{blue!40} \textbf{API name} & \cellcolor{blue!40} \textbf{Details}\\
+ \textbf{API name} &  \textbf{Details}\\
 \hline
  int initCassandraFunct (void); & Initialize the plug-in.\\
  \hline
@@ -409,6 +387,11 @@ that allows dynamic linking of compiled shared objects  to \emph{ntop} to add ex
   \hline
 \end{tabular}
 
-\section{CassandraPlugin Life Cycle}
-\includegraphics[scale = .5]{lifecycle.jpg}
-\end{document}
+\subsection{CassandraPlugin Life Cycle}
+          \begin{figure}[htb]
+	    \centering
+	    \includegraphics[scale = .5]{lfc.eps}
+	    %\caption{Cassandra Performance\cite{cassathpt}.} 
+	  \end{figure}
+
+

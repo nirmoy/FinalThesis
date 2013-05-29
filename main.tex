@@ -2,18 +2,19 @@
 %\usepackage{times}
 \usepackage{algorithmic} 
 \usepackage[algoruled]{algorithm2e} 
-
-
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{subfigure}
+\usepackage{epstopdf}
+\epstopdfsetup{update}
 \usepackage{makeidx}
 \usepackage{float}
 \geometry{tmargin=1 in,  bmargin=1 in, lmargin=1.5 in,  rmargin= 1 in}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
+ \DeclareGraphicsRule{.eps}{pdf}{.pdf}{`epstopdf #1}
 
 \makeindex
 

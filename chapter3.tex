@@ -10,7 +10,7 @@
   \emph{ntop} has following module
     \begin{enumerate}
      \item Packet Sniffer - Capture packet using \emph{libpcap} library and also from UNIX sockets.
-     \item Packet Analyzer - Analysis packet captured by Packet Sniffer.
+     \item Packet Analyzer - Analyze packets captured by Packet Sniffer.
      \item Traffic Rules - \emph{ntop} allows traffic rules for capturing packets to filter out unnecessary packets.
      \item Report Engine - Report Engine display analyzed output in an interactive web-based user interface. 
      \item Plugins - Using plugins anyone can extend \emph{ntop} to support extra features.
@@ -75,9 +75,9 @@
       data in short time. So for Flow monitoring a database should have following features:
       \begin{enumerate}
        \item Scalability : So that huge amount of data can be stored according to the demand.
-       \item High write throughput : As flow records generate at rapid speed in data center network, it requires  to write
+       \item High write throughput : As flow records generate at rapid speed in data center network, flow monitoring system needs  to write
 	     them fast.
-       \item Reasonable read performance : For real-time processing.
+       \item Reasonable read performance : For real-time flow processing.
        \item MapReduce support: For offline flow processing needs MapReduce for massive data crunching operation.
       \end{enumerate}
       
@@ -98,4 +98,108 @@
       \section{Cassandra C Client}
       \paragraph\
       Cassandra C client is a wrapper around Cassandra Python client that is Pycassa. I used C-Python API
-      to write wrapper around Python's Pycassa API.   
+      to write wrapper around Python's Pycassa API. Pycassa use Thrift RPC call to communicate with Cassandra.
+      Figure 2.3 describe how C client API call finally reach to Cassandra. Cassandra C client API has three major 
+      classes of APIs, these are 
+      \begin{enumerate}
+       \item Schema Manipulation API: Manage schema definitions of Cassandra.
+       \item Data Manipulation API: Insert or retrieve data from Cassandra. 
+       \item Utility API:  API do some common useful work. 
+      \end{enumerate}
+
+      \begin{figure}[htb]
+	 \centering
+         \includegraphics[scale=0.3]{C_client.eps}
+         \caption{API interaction with Cassandra }
+      \end{figure}
+      
+
+      \subsection{Schema Manipulation API}
+      \paragraph\
+      These API allows one to create or delete keyspace and column families. 
+      \begin{enumerate}
+       \item {\bf cassandraCreateKeyspace}(name, server, rf, strategy): Create keyspace on the server with replication factor(rf) and strategy.
+	    Supported strategies are 
+	     \begin{enumerate}
+	      \item SimpleStrategy : Replication strategy that simply chooses consecutive nodes in the ring for replicas.
+	      \item NetworkTopologyStrategy : Replication strategy that puts a number of replicas in each datacenter.
+	      \item OldNetworkTopologyStrategy : Same as NetworkTopologyStrategy with few limitations that solved in NetworkTopologyStrategy.
+	     \end{enumerate}
+
+       \item {\bf cassandraCreateColumnFamily}(name, keyspace, comparator, server): create column family on the keyspace with given comparator. 
+	      Supported comparators are 
+		    \begin{enumerate}
+		     \item AsciiType
+		     \item DoubleType
+		     \item IntegerType
+		     \item BytesType
+		     \item LongType
+		     \item FloatType
+		     \item TimeUUIDType
+		    \end{enumerate}
+      \item {\bf cassandraDropColumnFamily}(name, keyspace, server): Delete column family from keyspace.
+      \item {\bf cassandraDropKeyspace}(name, server): Delete keyspace from the server.
+      \end{enumerate}
+    \subsection{Data Manipulation API}
+    \paragraph\
+    These API deal with insertion and retrieval of data from Cassandra server.
+      \begin{enumerate}
+       \item {\bf cassandraConnect}(keyspace, columnfamily, server): Create a connection and store connection object in 
+	      internal Python dictionary for later use. As connection creation takes time, connection objects are cached in
+	      Python dictionary.
+       \item {\bf cassandraInsert}(id, key, value, column name): Insert a key-value pair in column family referred by id.
+       \item {\bf cassandraGet}(id, key): Return a dictionary of key-value pair from  column family referred by id.
+       \item {\bf cassandraGetItem}(dictionary, position, name, value): Return a column name and value from the dictionary's 
+	      specified by position.  
+      \end{enumerate}
+    \subsection{Utility API}
+    \paragraph\
+    These APIs provide general functionality that we need in general use.
+      \begin{enumerate}
+       \item {\bf isExistPycassa}(): Check existence of pycassa on the system.
+       \item {\bf isExistKeyspace}(name ,server): Check existence of keyspace on the server.
+       \item {\bf isExistColumnfamily}(name, keyspace,server): Check existence of columnfamily on the keyspace. 
+      \end{enumerate}
+
+      \section{Cassandra Plugin for \emph{ntop}}
+      Cassandra Plugin is developed in C as shared object. \emph{ntop} uses  shared objects principle to provide plug-in, 
+      that allows dynamic linking of compiled shared objects  to \emph{ntop} to add extra features.
+
+      \textbf{\emph{ntop} support following API for plugin support:}\\
+     
+     \begin{tabular}{|l|l|}
+	\hline
+	\textbf{API name} &  \textbf{Details}\\
+	\hline
+	int(*IntFunct)(void); & Called at initialization of the plugin.\\
+	\hline
+	void(*VoidFunct)(u\_char); & Called at termination of the plugin.\\
+	\hline
+	void(*PluginHTTPFunct)(char* url); & HTTP request handler function.\\
+	\hline
+      \end{tabular}
+      
+      
+      \paragraph{API of Cassandra Plugin:}In the bellow table I describe APIs that I wrote for
+      Cassandra Plugin for \emph{ntop}.\\
+      
+      
+      \begin{enumerate}
+       \item {\bf initCassandraFunct } (void): Initialize Cassandra Plugin. It check for pycassa module, 
+	      availability of Cassandra server then invokes cassandraMainLoop.
+       \item {\bf termCassandraFunct} (u\_char termNtop): Terminate Cassandra Plugin.
+       \item {\bf handlecassandraHTTPrequest} (char *\_url): It gets web request from web browser and serves them.\\
+       \item {\bf cassandraMainLoop}(void) : This API does all major work described in bellow.
+	      \begin{enumerate}
+	      \item Read configuration file and initialize data structure needed to store data.
+	       \item Identify sniffed interface, gets statistics from global variable and store into Cassandra.
+	       \item Identify NetFlow socket, gets data from global variable and store them to Cassandra. 
+	      \end{enumerate}
+      \end{enumerate}
+      \subsection{Architecture}
+      Figure 2.4 shows the architecture for Cassandra Plugin .
+                \begin{figure}[htb]
+	    \centering
+	    \includegraphics[scale = .5]{lfc.pdf}
+	    \caption{Architecture of Cassandra Plugin.} 
+	  \end{figure}

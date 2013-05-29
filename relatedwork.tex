@@ -148,7 +148,7 @@
 	\begin{enumerate}
 	 \item Read two records using $libpcap$ 16-byte header.
 	 \item Check timestamp value, that should be within duration of captured time.
-	 \item Difference between wired packet length and captured length should be less then maximum packet length.
+	 \item Difference between wired packet length and captured length should be less than maximum packet length.
 	 \item Check whether timestamp difference between two packet records within the define threshold. 
 	\end{enumerate}
 	
@@ -172,13 +172,13 @@
 	      \begin{enumerate}
 	       \item Human readable flow statistics.
 	       \item Aggregated flow statistics.
-	       \item Top N flows sorted by key such as packet count or byte count. 
+	       \item Top flows sorted by key such as packet count or byte count. 
 	      \end{enumerate}
 
 	\end{enumerate}
 
       \subsubsection{Interactive query interface with Hive}
-      Hive is a data warehousing system build on the top of Hadoop that allows to generate MapReduce jobs using SQl like query.
+      Hive is a data warehousing system build on the top of Hadoop that allows to generate MapReduce jobs using SQL like query.
       IP analysis MapReduce jobs process NetFlow packets on HDFS and  store flow record and IP statistics into
       Hive tables. A user can query on Hive tables using interactive web-based user interface.
       
@@ -190,14 +190,14 @@
 	\end{enumerate}
       Disadvantages of Hadoop based traffic  measurement and analysis are
 	\begin{enumerate}
-	 \item Low response time- ``the fasted MapReduce job takes 15+ seconds"\cite{mapreducetime}.
+	 \item Low response time- ``the fasted MapReduce job takes 15+ seconds"\cite{ha}.
 	 \item Hadoop NameNode was a single point of failure which solved in later version of 
 	        Hadoop 2.0.0 with passive NameNodes.
 	 \item Multiple NameNodes require to get high availability\cite{ha}.
 	\end{enumerate}
 
 	
-      \section{\emph{nfdump}}\cite{nfdump}
+      \section{\emph{nfdump}\cite{nfdump}}
       \paragraph\
       \emph{nfdump} provides set of tools to capture, analysis NetFlow packets. These set of tools are 
       \begin{enumerate}
