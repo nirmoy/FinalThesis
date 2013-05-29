@@ -1,5 +1,12 @@
-*.swp
-*.aux
+*.*~
 *.log
+*loa
 *.toc
-
+*.ps
+*.dvi
+*.lot
+*.ilg
+*.ind
+*.lof
+*.bbl
+*.aux
