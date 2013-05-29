@@ -115,8 +115,9 @@
 
    \section{Scalable Internet Traffic Measurement and Analysis with Hadoop\cite{Lee}}
    \paragraph\
-   Hadoop\cite{hadoop} is a distributed computing platform that uses distributed file system(HDFS) and MapReduce\cite{mapreduce} programming model. Hadoop consists of 
-   commodity hardware that can scale  thousands of nodes to store massive data. It can perform massive data analytics operations on 
+   Hadoop\cite{hadoop} is a distributed computing platform that uses distributed file system(HDFS) and MapReduce\cite{mapreduce} 
+   programming model. Hadoop cluster consists of 
+   commodity hardware that can scale  thousands of nodes to store huge amount of data. It can perform massive data analytics operations on 
    the available data using MapReduce. Storing NetFlow data on Hadoop and analysis using MapReduce offers scalable traffic 
    measurement and analysis.
    %Nirmoy:add images to describe Hadoop cluster and MapReduce 
@@ -131,24 +132,24 @@
 
      \subsubsection{Traffic collector}
      \paragraph\
-     Traffic collection done using high-speed packet capture driver and load balancer. Load balancer forwards packets into
-     multiple Hadoop DataNodes evenly. Traffic collector also can reads trace files stored on the disk and writes them into HDFS. 
+     Traffic collection is done by high-speed packet capture driver and load balancer. Load balancer forwards packets into
+     multiple Hadoop DataNodes evenly. Traffic collector also can read trace files stored on the disk and writes them into HDFS. 
      Trace files contains Netflow packets or IP packets in $libpcap$ format.
      \subsubsection{IP packet and NetFlow reader in Hadoop}
      \paragraph\
       Storing binary trace file into Hadoop specific sequence file needs more computation power as every packet has to be sequentially 
-      read from the trace file and stored into HDFS. Authors has develop new Hadoop API to store trace file directly into HDFS. 
+      read from the trace file and stored into HDFS. Authors has developed new Hadoop APIs to store trace file directly into HDFS. 
       As there is no distinct mark to find out end of a packet records in $libpcap$ format, authors proposed a heuristic algorithm
       using timestamp-based bit pattern.
 
-      \paragraph{MapReduce operation on HDFS to identify packet records:}
+      \paragraph{Timestamp-based heuristic algorithm using MapReduce to identify packet records:}
 	MapReduce job invokes multiple map tasks to process each HDFS block in parallel. Each of the map tasks follow these steps to
 	identify packet records in HDFS block:
 	\begin{enumerate}
 	 \item Read two records using $libpcap$ 16-byte header.
 	 \item Check timestamp value, that should be within duration of captured time.
-	 \item Wiredlen - caplen $\langle$ maximum packet length.
-	 \item Check whether timestamp difference between two packet records within the define threshold threshold. 
+	 \item Difference between wired packet length and captured length should be less then maximum packet length.
+	 \item Check whether timestamp difference between two packet records within the define threshold. 
 	\end{enumerate}
 	
 	\subsubsection{Analysis in MapReduce}
@@ -196,11 +197,32 @@
 	\end{enumerate}
 
 	
-      \section{$nfdump$}
+      \section{\emph{nfdump\cite{nfdump}}}
       \paragraph\
-      $nfdump$ provide set of tool to capture, analysis NetFlow packets. These set of tools are 
+      \emph{nfdump} provides set of tools to capture, analysis NetFlow packets. These set of tools are 
       \begin{enumerate}
-       \item nfcapd - NetFlow capture daemon that reads netflow packets from network and store in disk.
-       \item nfdump - It reads netflow data stored by nfcapd and display netflow data with $tcpdump$-style filter.
-       \item Nfsen
+	\item \emph{nfcapd}
+	\item \emph{nfdump}
+	\item NfSen 
+       \end{enumerate}
+      \emph{nfcapd} reads data from the network and stores them into disk. It also rotate the file to limit size of file.
+      \emph{nfdump} allows $tcpdump$ style filter expression for processing NetFlow data stored by \emph{nfcapd} and display
+      them on terminal or write into file. NfSen gives graphical overview of NetFlow data using RRDTool\cite{rrd};
+        \begin{figure}[htb]
+          \centering
+          \includegraphics[scale=.35]{nfdump.png}
+          \caption{Architecture of \emph{nfdump}.} 
+	\end{figure}
+      \subsection{Advantages and Limitations}
+      \emph{nfdump} is suitable for small scale NetFlow analysis. In case of large scale NetFlow monitoring disk file 
+      based storage is not sufficient.
+      
+      \section{Summary}
+      In this section I have discussed  available solutions for scalable flow monitoring. The issues with current solutions are 
+      \begin{enumerate}
+       \item Lack of scalable storage.\cite{emc2}\cite{nfdump}.
+       \item Lack of high availability data storage \cite{Lee}.
+       \item Real-time flow analysis is difficult with current systems. \cite{Lee}  
       \end{enumerate}
+      In the next chapter I describe design and implementation of modified \emph{ntop}(a NetFlow collector) that tries to solve
+      few of the issues.

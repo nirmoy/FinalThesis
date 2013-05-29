@@ -2,53 +2,54 @@ This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
 The top-level auxiliary file: main.aux
 The style file: PhDbiblio-bold.bst
 Database file #1: ref.bib.bib
+Warning--I didn't find a database entry for "mapreducetime"
+Warning--to sort, need author or key in nfdump
 Warning--to sort, need author or key in NetFlow
 Warning--to sort, need author or key in sFlow
 Warning--to sort, need author or key in hadoop
 Warning--to sort, need author or key in mapreduce
 Warning--to sort, need author or key in hive
-Warning--to sort, need author or key in mapreducetime
 Warning--to sort, need author or key in ha
 Warning--to sort, need author or key in rrd
-You've used 10 entries,
+You've used 12 entries,
             2170 wiz_defined-function locations,
-            544 strings with 4915 characters,
-and the built_in function-call counts, 1953 in all, are:
-= -- 177
-> -- 39
-< -- 0
-+ -- 20
-- -- 10
-* -- 111
-:= -- 250
-add.period$ -- 22
-call.type$ -- 10
-change.case$ -- 25
+            561 strings with 5499 characters,
+and the built_in function-call counts, 3119 in all, are:
+= -- 296
+> -- 105
+< -- 2
++ -- 47
+- -- 34
+* -- 205
+:= -- 427
+add.period$ -- 30
+call.type$ -- 12
+change.case$ -- 41
 chr.to.int$ -- 0
-cite$ -- 18
-duplicate$ -- 94
-empty$ -- 240
-format.name$ -- 10
-if$ -- 450
+cite$ -- 20
+duplicate$ -- 142
+empty$ -- 317
+format.name$ -- 34
+if$ -- 704
 int.to.chr$ -- 0
-int.to.str$ -- 10
-missing$ -- 2
-newline$ -- 45
-num.names$ -- 4
-pop$ -- 77
+int.to.str$ -- 12
+missing$ -- 4
+newline$ -- 55
+num.names$ -- 8
+pop$ -- 95
 preamble$ -- 1
-purify$ -- 25
+purify$ -- 41
 quote$ -- 0
-skip$ -- 78
+skip$ -- 113
 stack$ -- 0
-substring$ -- 66
-swap$ -- 24
-text.length$ -- 0
+substring$ -- 133
+swap$ -- 46
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 40
+type$ -- 48
 warning$ -- 8
-while$ -- 6
-width$ -- 12
-write$ -- 79
-(There were 8 warnings)
+while$ -- 16
+width$ -- 14
+write$ -- 107
+(There were 9 warnings)

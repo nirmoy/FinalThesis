@@ -4,10 +4,6 @@
 {\bf Apache Hadoop}.
 \newblock \url{http://hadoop.apache.org/}.
 
-\bibitem{mapreducetime}
-{\bf Apache Hadoop and Hbase}.
-\newblock \url{http://www.slideshare.net/cloudera/sf-nosql2011/58}.
-
 \bibitem{ha}
 {\bf Apache Hadoop and Hbase}.
 \newblock \url{http://www.slideshare.net/cloudera/sf-nosql2011/58}.
@@ -26,6 +22,10 @@ home.html}.
 {\bf Mapreduce}.
 \newblock \url{http://en.wikipedia.org/wiki/MapReduce}.
 
+\bibitem{nfdump}
+{\bf nfdump Home Page}.
+\newblock \url{http://nfdump.sourceforge.net/}.
+
 \bibitem{rrd}
 {\bf RRDTool Home Page}.
 \newblock \url{http://oss.oetiker.ch/rrdtool/}.
@@ -33,6 +33,20 @@ home.html}.
 \bibitem{sFlow}
 {\bf sFlow Official Site}.
 \newblock \url{http://www.sflow.org}.
+
+\bibitem{dynamo}
+{\sc Giuseppe DeCandia, Deniz Hastorun, Madan Jampani, Gunavardhan Kakulapati,
+  Avinash Lakshman, Alex Pilchin, Swaminathan Sivasubramanian, Peter Vosshall,
+  and Werner Vogels}.
+\newblock {\bf Dynamo: amazon's highly available key-value store}.
+\newblock In {\em Proceedings of twenty-first ACM SIGOPS symposium on Operating
+  systems principles}, SOSP '07, pages 205--220, New York, NY, USA, 2007. ACM.
+
+\bibitem{gfs}
+{\sc Sanjay Ghemawat, Howard Gobioff, and Shun-Tak Leung}.
+\newblock {\bf The Google file system}.
+\newblock In {\em Proceedings of the nineteenth ACM symposium on Operating
+  systems principles}, SOSP '03, pages 29--43, New York, NY, USA, 2003. ACM.
 
 \bibitem{Lee}
 {\sc Yeonhee Lee and Youngseok Lee}.

@@ -31,11 +31,12 @@
  keywords = {analysis, hadoop, hive, mapreduce, netflow, packet, pcap, traffic measurement},
 }
 
-@misc{mapreducetime,
-  title = {Apache Hadoop and Hbase},
-  howpublished = {\url{http://www.slideshare.net/cloudera/sf-nosql2011/58}},
+@misc{nfdump,
+  title = {nfdump Home Page},
+  howpublished = {\url{http://nfdump.sourceforge.net/}},
   
 }
+
 
 @misc{ha,
   title = {Apache Hadoop and Hbase},
@@ -76,4 +77,39 @@ http://oss.oetiker.ch/rrdtool/
   title = {Apache Hadoop},
   howpublished = {\url{http://hadoop.apache.org/}},
   
+}
+
+@inproceedings{dynamo,
+ author = {DeCandia, Giuseppe and Hastorun, Deniz and Jampani, Madan and Kakulapati, Gunavardhan and Lakshman, Avinash and Pilchin, Alex and Sivasubramanian, Swaminathan and Vosshall, Peter and Vogels, Werner},
+ title = {Dynamo: amazon's highly available key-value store},
+ booktitle = {Proceedings of twenty-first ACM SIGOPS symposium on Operating systems principles},
+ series = {SOSP '07},
+ year = {2007},
+ isbn = {978-1-59593-591-5},
+ location = {Stevenson, Washington, USA},
+ pages = {205--220},
+ numpages = {16},
+ url = {http://doi.acm.org/10.1145/1294261.1294281},
+ doi = {10.1145/1294261.1294281},
+ acmid = {1294281},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {performance, reliability, scalability},
+}
+@inproceedings{gfs,
+ author = {Ghemawat, Sanjay and Gobioff, Howard and Leung, Shun-Tak},
+ title = {The Google file system},
+ booktitle = {Proceedings of the nineteenth ACM symposium on Operating systems principles},
+ series = {SOSP '03},
+ year = {2003},
+ isbn = {1-58113-757-5},
+ location = {Bolton Landing, NY, USA},
+ pages = {29--43},
+ numpages = {15},
+ url = {http://doi.acm.org/10.1145/945445.945450},
+ doi = {10.1145/945445.945450},
+ acmid = {945450},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {clustered storage, data storage, fault tolerance, scalability},
 }

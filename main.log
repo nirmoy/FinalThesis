@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  28 MAY 2013 23:53
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.8.20)  29 MAY 2013 12:59
 entering extended mode
  %&-line parsing enabled.
 **main.tex
@@ -245,9 +245,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 61.
 
 
-LaTeX Warning: File `uoh.eps' not found on input line 61.
-
-
 ! LaTeX Error: Unknown graphics extension: .eps.
 
 See the LaTeX manual or LaTeX Companion for explanation.
@@ -264,9 +261,6 @@ If that doesn't work, type  X <return>  to quit.
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-
-LaTeX Warning: File `uoh.eps' not found on input line 69.
-
 
 ! LaTeX Error: Unknown graphics extension: .eps.
 
@@ -334,23 +328,23 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 3.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 3.
-)
+ [4
+
+])
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [4
-
-] (./main.lof)
+ [5] (./main.lof)
 \tf@lof=\write5
 \openout5 = `main.lof'.
 
- [5
+ [6
 
 ] (./main.lot)
 \tf@lot=\write6
 \openout6 = `main.lot'.
 
- [6
+ [7
 
 ]
 Chapter 1.
@@ -360,7 +354,7 @@ Overfull \hbox (65.50966pt too wide) in paragraph at lines 9--9
 
  []
 
-<emc2.png, id=29, 1395.71437pt x 844.65562pt>
+<emc2.png, id=33, 1395.71437pt x 844.65562pt>
 File: emc2.png Graphic file (type png)
  <use emc2.png>
 Overfull \hbox (54.88734pt too wide) in paragraph at lines 18--19
@@ -392,36 +386,100 @@ Overfull \hbox (17.08778pt too wide) in paragraph at lines 116--116
 []\OT1/cmr/bx/n/17.28 Scalable In-ter-net Traf-fic Mea-sure-ment and Anal-
  []
 
-[4] [5] [6] <nfdump.png, id=52, 1336.995pt x 794.97pt>
+[4] [5]
+
+LaTeX Warning: Citation `mapreducetime' on page 6 undefined on input line 193.
+
+[6] <nfdump.png, id=55, 1336.995pt x 794.97pt>
 File: nfdump.png Graphic file (type png)
  <use nfdump.png>
-Overfull \hbox (34.33525pt too wide) in paragraph at lines 212--213
+Overfull \hbox (34.33525pt too wide) in paragraph at lines 213--214
  [][] 
  []
 
-) [7 <./nfdump.png>] (./main.bbl) [8
+[7 <./nfdump.png>]) [8]
+Chapter 2.
+(./chapter3.tex <ntoparc.jpg, id=62, 401.5pt x 411.5375pt>
+File: ntoparc.jpg Graphic file (type jpg)
+ <use ntoparc.jpg>
+[9
 
-] (./main.aux) ) 
+] [10 <./ntoparc.jpg>]
+! Undefined control sequence.
+<recently read> \toprule 
+                         
+l.68 	\toprule
+              
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \hrule \@height \arrayrulewidth \futurelet...
+l.69 ...ated& Time & Size of generated data \hline
+                                                   \\
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! You can't use `\hrule' here except with leaders.
+\hline ->\noalign {\ifnum 0=`}\fi \hrule 
+                                         \@height \arrayrulewidth \futurelet...
+l.69 ...ated& Time & Size of generated data \hline
+                                                   \\
+To put a horizontal rule in an hbox or an alignment,
+you should use \leaders or \hrulefill (see The TeXbook).
+
+! Missing number, treated as zero.
+<to be read again> 
+                   \futurelet 
+l.69 ...ated& Time & Size of generated data \hline
+                                                   \\
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \futurelet 
+l.69 ...ated& Time & Size of generated data \hline
+                                                   \\
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+) [11] (./main.bbl [12
+
+]) [13] (./main.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2904 strings out of 493848
- 37133 string characters out of 1152823
- 117135 words of memory out of 3000000
- 6153 multiletter control sequences out of 15000+50000
- 11249 words of font info for 39 fonts, out of 3000000 for 9000
+ 2920 strings out of 493848
+ 37323 string characters out of 1152823
+ 118151 words of memory out of 3000000
+ 6164 multiletter control sequences out of 15000+50000
+ 11967 words of font info for 41 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  25i,8n,24p,425b,554s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12
-.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></us
-r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/te
-xmf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive
-/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1
-/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
-onts/cm/cmsl12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cms
-y10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb></u
-sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on main.pdf (15 pages, 355383 bytes).
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-texlive/fo
+nts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/p
+ublic/amsfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsl12
+.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
+share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf
+-texlive/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on main.pdf (21 pages, 408311 bytes).
 PDF statistics:
- 93 PDF objects out of 1000 (max. 8388607)
+ 113 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
