@@ -6,7 +6,7 @@
   provide scalable flow monitoring in data center networks. In this chapter, we review some of the literature that deals with scalable 
   flow monitoring in data center networks.
   
-  \section{Edge Monitoring and Collection for Cloud (EMC2)\cite{emc2}} 
+  \section{Edge Monitoring and Collection for Cloud\\ (EMC2)\cite{emc2}} 
   \paragraph\
     Edge Monitoring and Collection for Cloud (EMC2) is a scalable network-wide monitoring service for data centers. 
     EMC2 stays inside the host computer  to monitor virtual switches. Monitoring at virtual switch is scalable due to 
@@ -115,14 +115,14 @@
 
    \section{Scalable Internet Traffic Measurement and Analysis with Hadoop\cite{Lee}}
    \paragraph\
-   Hadoop\cite{hadoop} is a distributed computing platform that uses distributed file system(HDFS) and MapReduce\cite{mapreduce} 
-   programming model. Hadoop cluster consists of 
-   commodity hardware that can scale  thousands of nodes to store huge amount of data. It can perform massive data analytics operations on 
+   Hadoop\cite{hadoop} is a distributed computing platform that uses a distributed file system(HDFS) and MapReduce\cite{mapreduce} 
+   programming model. A Hadoop cluster consists of 
+   commodity hardware that can scale  to thousands of nodes to store huge amounts of data. It can perform massive data analytics operations on 
    the available data using MapReduce. Storing NetFlow data on Hadoop and analysis using MapReduce offers scalable traffic 
    measurement and analysis.
    %Nirmoy:add images to describe Hadoop cluster and MapReduce 
     \subsection{Architecture}
-     Traffic measurement and analysis system with Hadoop consists of following modules
+     Traffic measurement and analysis system with Hadoop consists of the following modules:
      \begin{enumerate}
       \item Traffic collector.
       \item IP packet and NetFlow reader in Hadoop.
@@ -132,37 +132,45 @@
 
      \subsubsection{Traffic collector}
      \paragraph\
-     Traffic collection is done by high-speed packet capture driver and load balancer. Load balancer forwards packets into
-     multiple Hadoop DataNodes evenly. Traffic collector also can read trace files stored on the disk and writes them into HDFS. 
+     Traffic collection is done by a high-speed packet capture driver and load balancer. Load balancer forwards packets into
+     multiple Hadoop data nodes evenly. Traffic collector also reads trace files stored on the disk and writes them into HDFS. 
      Trace files contains Netflow packets or IP packets in $libpcap$ format.
+	
      \subsubsection{IP packet and NetFlow reader in Hadoop}
      \paragraph\
-      Storing binary trace file into Hadoop specific sequence file needs more computation power as every packet has to be sequentially 
-      read from the trace file and stored into HDFS. Authors has developed new Hadoop APIs to store trace file directly into HDFS. 
-      As there is no distinct mark to find out end of a packet records in $libpcap$ format, authors proposed a heuristic algorithm
-      using timestamp-based bit pattern.
+      Storing binary trace files into Hadoop specific sequence files needs more computation power as every packet has to be sequentially 
+      read from the trace file and stored into HDFS. The authors have %AP: Authors is a plural, so the plural verb is ``have'' not ``has''.
+      developed new Hadoop APIs to store trace files directly into HDFS. 
+      As there is no distinct mark to find out the end of a packet record %AP: When you use the article ``a'' it means a single entity - you cannot say ``a packet records''.
+      in $libpcap$ format, authors proposed a heuristic algorithm using timestamp-based bit pattern.
 
       \paragraph{Timestamp-based heuristic algorithm using MapReduce to identify packet records:}
-	MapReduce job invokes multiple map tasks to process each HDFS block in parallel. Each of the map tasks follow these steps to
-	identify packet records in HDFS block:
+	MapReduce job invokes multiple map tasks to process each	 HDFS block in parallel. 
+	%AP: Do you mean that one block is processed in parallel or multiple blocks can be processed in parallel? If the latter, we have to change the above sentence? 
+	Each of the map tasks follows these steps to identify the packet records in a HDFS block:
 	\begin{enumerate}
-	 \item Read two records using $libpcap$ 16-byte header.
+	 \item Read two records using the $libpcap$ 16-byte header.
 	 \item Check timestamp value, that should be within duration of captured time.
+	 %AP: Cannot understand what you mean
 	 \item Difference between wired packet length and captured length should be less than maximum packet length.
-	 \item Check whether timestamp difference between two packet records within the define threshold. 
+	 \item Check whether timestamp difference between the two packet records is within the defined
+	 %AP: not ``within the define'' - you have to use past tense here.
+	 threshold. 
 	\end{enumerate}
+	%AP: There is no way I can understand what the heuristic is and how it is helping from your description of the algorithm here. We will have to discuss this and I may have to re-write it to make a coherent algorithm.
 	
 	\subsubsection{Analysis in MapReduce}
-	Authors has implemented  MapReduce algorithms for processing IP packet as well as NetFlow packets.
-	Here is the list of analysis tools
+	The authors have %AP: again, authors is plural and so you must use ``have'' - also, you must use the definite article ``the'' as the authors are defined - not just any authors in the world.
+	implemented  analysis tools for processing IP packet as well as NetFlow packets using MapReduce algorithms. The tools implemented are:
+	
 	\begin{enumerate}
-	 \item IP Layer analysis provide following analysis jobs
+	 \item IP Layer analysis tools provide the following analysis jobs:
 	      \begin{enumerate}
 	       \item Host and port count statistics.
 	       \item Periodic flow statistics.
 	       \item Periodic sample traffic statistics.
 	      \end{enumerate}
-	 \item TCP layer analysis compute following statistics
+	 \item TCP layer analysis computes the following statistics:
 	       \begin{enumerate}
 	        \item RTT.
 	        \item Retransmission.
@@ -172,15 +180,14 @@
 	      \begin{enumerate}
 	       \item Human readable flow statistics.
 	       \item Aggregated flow statistics.
-	       \item Top flows sorted by key such as packet count or byte count. 
+	       \item Top flows sorted by a key such as packet count or byte count. 
 	      \end{enumerate}
-
 	\end{enumerate}
 
       \subsubsection{Interactive query interface with Hive}
-      Hive is a data warehousing system build on the top of Hadoop that allows to generate MapReduce jobs using SQL like query.
+      Hive is a data warehousing system build on top of Hadoop that allows us to generate MapReduce jobs using SQL like query.
       IP analysis MapReduce jobs process NetFlow packets on HDFS and  store flow record and IP statistics into
-      Hive tables. A user can query on Hive tables using interactive web-based user interface.
+      Hive tables. A user can then query the Hive tables using the interactive web-based user interface.
       
       \subsection{Advantages and Limitations}
       Advantages of Hadoop based traffic  measurement and analysis are 
@@ -190,32 +197,33 @@
 	\end{enumerate}
       Disadvantages of Hadoop based traffic  measurement and analysis are
 	\begin{enumerate}
-	 \item Low response time- ``the fasted MapReduce job takes 15+ seconds"\cite{ha}.
-	 \item Hadoop NameNode was a single point of failure which solved in later version of 
+	 \item Low response time- ``the fastest MapReduce job takes 15+ seconds"\cite{ha}.
+	 \item Hadoop NameNode was a single point of failure which was solved in later version of 
 	        Hadoop 2.0.0 with passive NameNodes.
-	 \item Multiple NameNodes require to get high availability\cite{ha}.
+	 \item Multiple NameNodes required to get high availability\cite{ha}.
 	\end{enumerate}
 
 	
       \section{\emph{nfdump}\cite{nfdump}}
       \paragraph\
-      \emph{nfdump} provides set of tools to capture, analysis NetFlow packets. These set of tools are 
+      \emph{nfdump} provides a set of tools to capture and analyse NetFlow packets. The set of tools are :
       \begin{enumerate}
 	\item \emph{nfcapd}
 	\item \emph{nfdump}
 	\item NfSen 
        \end{enumerate}
-      \emph{nfcapd} reads data from the network and stores them into disk. It also rotate the file to limit size of file.
-      \emph{nfdump} allows $tcpdump$ style filter expression for processing NetFlow data stored by \emph{nfcapd} and display
-      them on terminal or write into file. NfSen gives graphical overview of NetFlow data using RRDTool\cite{rrd};
+
+       \emph{nfcapd} reads data from the network and stores them into the disk. It also rotates %AP: rotates - remember the verb plural/singular rules - also, I am not anyway happy with the word rotate - dont you thnk CS has nice technical terms for such a behavior? Such as ''It treats the file as a circular queue to limit the size of the file``.
+       the file to limit size of file.
+      \emph{nfdump} allows $tcpdump$ style filter expression for processing NetFlow data stored by \emph{nfcapd} and displaying them on terminal or writing them into a file. NfSen gives a graphical overview of NetFlow data using RRDTool\cite{rrd};
         \begin{figure}[htb]
           \centering
           \includegraphics[scale=.35]{nfdump.png}
           \caption{Architecture of \emph{nfdump}.} 
 	\end{figure}
-      \subsection{Advantages and Limitations}
-      \emph{nfdump} is suitable for small scale NetFlow analysis. In case of large scale NetFlow monitoring disk file 
-      based storage is not sufficient.
+
+	\subsection{Advantages and Limitations}
+      \emph{nfdump} is suitable for small scale NetFlow analysis. In case of large scale NetFlow monitoring disk file based storage is not sufficient.
       
       \section{Summary}
       In this section I have discussed  available solutions for scalable flow monitoring. The issues with current solutions are 
@@ -224,5 +232,6 @@
        \item Lack of high availability data storage \cite{Lee}.
        \item Real-time flow analysis is difficult with current systems. \cite{Lee}  
       \end{enumerate}
-      In the next chapter I describe design and implementation of modified \emph{ntop}(a NetFlow collector) that tries to solve
-      few of the issues.
+
+      In the next chapter I describe the design and implementation of modified \emph{ntop}(a NetFlow collector) that tries to solve a few of these issues.
+      
