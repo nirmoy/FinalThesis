@@ -1,0 +1,118 @@
+\section{Overview}
+\paragraph\
+    OpenVswitch, a multilayer software switch that supports NetFlow, sFlow, SPAN, RSPAN, CLI, LACP, 802.1ag as management 
+    protocols is been heavily used for network virtualization platforms. In this chapter I describe about design and 
+    implementation of OpenVswitch modification to support scalable flow monitoring. We have able to enable writing NetFlow
+    data directly to the Cassandra database from OpenVswitch using shared memory and Python Daemon. The last section detail outs our 
+    findings of experiments that done on modified OpenVswitch.
+    
+    \section{NetFlow Monitoring}
+    \paragraph\
+    NetFlow is the de-facto protocol for flow monitoring. Routers maintains ``flow cache" contains flow records that forwarded
+    by the router. These flow records later exported to a NetFlow collector using UDP. Flows are identify by IP address,
+    source and destination port, protocol and type of service. When a packet reaches one of its interface, it update ``flow cache"
+    if packet belongs to existing flows otherwise it creates a new flow. A flow is ended depending on these rules:
+    \begin{enumerate}
+     \item When a TCP RST or FIN received.
+     \item Active time out is over.
+     \item Inactive time out is over.
+     \item When ``flow cache" is over.
+    \end{enumerate}
+    Other than flow key each flow records contains timestamps of first and last packet received, number of packet and bytes  received,
+    SNMP index. These flow records fields can be use for multiple analysis, like port numbers can be use for identifying application
+    patterns and so on. Table \ref{netflowheader} describes about NetFlow packet header anf table \ref{netflowrecord} describes 
+    about NetFlow record format.
+    \begin{table}
+     \label{netflowheader}
+     \begin{tabular}{|p{2cm}|p{11cm}|p{2cm}|}
+      \hline
+      {\bf Name} & {\bf Description} & {\bf Length in Bytes} \\ \hline
+      Version & Type of record format. & 2 \\ \hline
+      Count   & Number of flow records contained. & 2 \\ \hline
+      SysUpTime & How long the system has been up and running. & 4 \\ \hline
+      Epoch	& UNIX timestamp value when the packet was sent. & 4 \\ \hline
+      Nanoseconds & Residual nanoseconds after epoch second.	& 4\\ \hline
+      Flow Seen	& Total number of flow seen since the exporter began emitting flow detail records. & 4\\ \hline
+      Engine Type & User-configurable value (0-255) assigned to the exporter. & 1 \\ \hline
+      Engine ID  & User-configurable value (0-255) assigned to the exporter. & 1 \\ \hline
+      Sampling Interval & First two bits hold the sampling mode; remaining 14 bits hold value of sampling interval. & 2 \\ \hline
+     \end{tabular}
+     \caption{Netflow Header Format}
+    \end{table}
+    \begin{table}
+     \begin{tabular}{|p{4cm}|p{9cm}|p{2cm}|}
+      \hline
+      {\bf Name} & {\bf Description} & {\bf Length in Bytes} \\ \hline
+      Source Address & Source IP address. & 4 \\ \hline
+      Destination Address & Destination IP address. & 4 \\ \hline
+      Next Hop & IP address of next hop router. & 4 \\ \hline
+      Input & SNMP index of input interface. & 2 \\ \hline
+      Output & SNMP index of output interface & 2 \\ \hline
+      Packet Count & Total packets in the flow. & 4 \\ \hline
+      Byte Count & Total bytes in teh flow. & 4 \\ \hline
+      First & System up time when flow started. & 4 \\ \hline
+      Last  & System up time when flow ended. & 4 \\ \hline
+      Source Port & TCP/UDP source port. & 2 \\ \hline
+      Destination Port & TCP/UDp destination port. & 2 \\ \hline
+      Pad1 & Unused byte. & 1 \\ \hline
+      TCP Flags & Cumulative OR of TCP flags. & 1 \\ \hline
+      Protocol &  IP protocol type (for example, TCP = 6; UDP = 17). & 1 \\ \hline
+      TOS & Type of service & 1 \\ \hline
+      Source AS & Autonomous system number of the source, either origin or peer. & 4 \\ \hline
+      Destination AS & Autonomous system number of the destination, either origin or peer. & 4 \\ \hline
+      Source Mask & Source address prefix mask bits. & 4 \\ \hline
+      Destination Mask & Destination address prefix mask bits. & 4 \\ \hline
+      Pad2 & Unused & 2 \\ \hline
+      \end{tabular}
+     \label{netflowrecord}
+     \caption{NetFlow Record Format}
+    \end{table}
+
+
+    
+    \paragraph{OpenVswitch as NetFlow Exporter:} OpenVswitch supports NetFlow protocol. OpenVswitch, a Openflow software switch that 
+    maintains basic flow statistics for each OpenFlow rules. Flow key in define by OpenFlow switch is different than 
+    flow key in general NetFlow enabled router or switchs. OpenFlow switches maintain ``flow table", an entry in ``flow table"
+    contains three fields . These are :
+    \begin{enumerate}
+     \item A packet header that define flow tuple which can include upto 10 tuple in below.
+	  \begin{enumerate}
+	   \item In Port.
+	   \item VLAN ID.
+	   \item Source MAC.
+	   \item Destination MAC.
+	   \item Source IP.
+	   \item Destination IP.
+	   \item Ethernet Type.
+	   \item IP Protocol.
+	   \item Source IP Port.
+	   \item Destination IP Port.
+	  \end{enumerate}
+      \item A action, which defines how the packet should be processed.
+      \item Statistics, which keep track of number of packets and bytes, time since last packet seen.
+    \end{enumerate}
+    Using fields 1 and 3 a OpenFlow enable switches creates NetFlow packets. Though OpenVswitch calculates NetFlow in different way, 
+    it improves network visibility to 100\% \cite{sdnnetflow}.
+    \paragraph{Limitations of NetFlow Analysis using on Collectors:} 
+    NetFlow monitoring can be done either by storing flow records in some database and later analyzed by another application or 
+    NetFlow collector itself can collect and analyze flow records and store the analyzed data into database.\emph{ntop} follows these
+    analysis-store approach that is one of the reason why \emph{ntop} losses packets on high speed network. Next section describes our 
+    proposed solutions to the problem.
+    
+\section{Proposed Scalable Solution for Flow Monitoring}
+\paragraph\
+    Currently OpenVswitch can exports NetFlow packets as UDP packets to a  collector like \emph{ntop} that receives NetFlow records then 
+    analysis them. UDP is connection less protocol, it does not guarantee reliable communication. Packets may get lost by \emph{ntop}
+    while processing because of socket buffer overflow. In previous chapter, our results shows that if \emph{ntop} has less socket buffer 
+    it tent to losses packets. Our solution tries to avoid NetFlow collector all together allowing OpenVswitch host to store NetFlow
+    records directly to scalable database, Cassandra. Now any NetFlow analysis tool can read flow records from the database and then analysis
+    them. As OpenVswitch is distributed in nature writing flow records directly from OpenVswitch host to Cassandra provides scalable
+    way to collect flow records. Cassandra is scalable and distributed database offer scalable storage for our solution.
+    
+    \subsection{Design}
+    \paragraph\
+	Our solution uses shared memory for storing NetFlow records from OpenVswitch. Another Python program that checks the shared 
+	memory region for new flow records store them into Cassandra using $Pycassa$. By this we avoiding any NetFlow collector which can
+	become bottleneck. 
+
+    
