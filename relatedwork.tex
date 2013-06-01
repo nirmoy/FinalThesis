@@ -1,12 +1,12 @@
 \paragraph\
-  Flow monitoring protocols like NetFlow\cite{NetFlow} and sFlow\cite{sFlow} can provide   important information about traffic that 
+  Flow monitoring protocols like NetFlow \cite{NetFlow} and sFlow \cite{sFlow} can provide   important information about traffic that 
   passes through a network. However, contemporary  networking with its 10Gbps and higher NICs is outpacing the ability to monitor them 
   efficiently. As data centers are getting virtualized with virtual software switches and scaling to thousands  of nodes, 
   it is an immediate requirement to have monitoring systems that can scale effectively. There are not many solutions proposed that 
   provide scalable flow monitoring in data center networks. In this chapter, we review some of the literature that deals with scalable 
   flow monitoring in data center networks.
   
-  \section{Edge Monitoring and Collection for Cloud\\ (EMC2)\cite{emc2}} 
+  \section{Edge Monitoring and Collection for Cloud\\ (EMC2) \cite{emc2}} 
   \paragraph\
     Edge Monitoring and Collection for Cloud (EMC2) is a scalable network-wide monitoring service for data centers. 
     EMC2 stays inside the host computer  to monitor virtual switches. Monitoring at virtual switch is scalable due to 
@@ -16,10 +16,11 @@
     \begin{figure}[htb]
           \centering
           \includegraphics[scale=.35]{emc2.png}
-          \caption{Architecture of EMC2.} 
+          \caption{Architecture of EMC2 \cite{emc2}.} 
+          \label{EMC2_arch}
     \end{figure}
     
-    Figure 1.1 shows the architecture of EMC2.
+    Figure \ref{EMC2_arch} shows the architecture of EMC2.
 
     \paragraph\
     EMC2 is a multi-threaded application that contains the following modules:
@@ -113,21 +114,22 @@
     
     %AP: There is a real problem with your references. But, I will look at how you wrote your .bib file etc. on Monday.
 
-   \section{Scalable Internet Traffic Measurement and Analysis with Hadoop\cite{Lee}}
+   \section{Scalable Internet Traffic Measurement and Analysis with Hadoop \cite{Lee}}
    \paragraph\
-   Hadoop\cite{hadoop} is a distributed computing platform that uses a distributed file system(HDFS) and MapReduce\cite{mapreduce} 
+   Hadoop \cite{hadoop} is a distributed computing platform that uses a distributed file system(HDFS) and MapReduce \cite{mapreduce} 
    programming model. A Hadoop cluster consists of 
    commodity hardware that can scale  to thousands of nodes to store huge amounts of data. It can perform massive data analytics operations on 
    the available data using MapReduce. Storing NetFlow data on Hadoop and analysis using MapReduce offers scalable traffic 
    measurement and analysis.
    %Nirmoy:add images to describe Hadoop cluster and MapReduce 
+   %\subsection{Hadoop Architecture}
     \subsection{Architecture}
      Traffic measurement and analysis system with Hadoop consists of the following modules:
      \begin{enumerate}
       \item Traffic collector.
       \item IP packet and NetFlow reader in Hadoop.
       \item Analysis in MapReduce.
-      \item Interactive query interface with Hive\cite{hive}.
+      \item Interactive query interface with Hive \cite{hive}.
      \end{enumerate}
 
      \subsubsection{Traffic collector}
@@ -197,14 +199,14 @@
 	\end{enumerate}
       Disadvantages of Hadoop based traffic  measurement and analysis are
 	\begin{enumerate}
-	 \item Low response time- ``the fastest MapReduce job takes 15+ seconds"\cite{ha}.
+	 \item Low response time- ``the fastest MapReduce job takes 15+ seconds" \cite{ha}.
 	 \item Hadoop NameNode was a single point of failure which was solved in later version of 
 	        Hadoop 2.0.0 with passive NameNodes.
-	 \item Multiple NameNodes required to get high availability\cite{ha}.
+	 \item Multiple NameNodes required to get high availability \cite{ha}.
 	\end{enumerate}
 
 	
-      \section{\emph{nfdump}\cite{nfdump}}
+      \section{\emph{nfdump} \cite{nfdump}}
       \paragraph\
       \emph{nfdump} provides a set of tools to capture and analyse NetFlow packets. The set of tools are :
       \begin{enumerate}
@@ -215,7 +217,7 @@
 
        \emph{nfcapd} reads data from the network and stores them into the disk. It also rotates %AP: rotates - remember the verb plural/singular rules - also, I am not anyway happy with the word rotate - dont you thnk CS has nice technical terms for such a behavior? Such as ''It treats the file as a circular queue to limit the size of the file``.
        the file to limit size of file.
-      \emph{nfdump} allows $tcpdump$ style filter expression for processing NetFlow data stored by \emph{nfcapd} and displaying them on terminal or writing them into a file. NfSen gives a graphical overview of NetFlow data using RRDTool\cite{rrd};
+      \emph{nfdump} allows $tcpdump$ style filter expression for processing NetFlow data stored by \emph{nfcapd} and displaying them on terminal or writing them into a file. NfSen gives a graphical overview of NetFlow data using RRDTool \cite{rrd};
         \begin{figure}[htb]
           \centering
           \includegraphics[scale=.35]{nfdump.png}
@@ -224,14 +226,62 @@
 
 	\subsection{Advantages and Limitations}
       \emph{nfdump} is suitable for small scale NetFlow analysis. In case of large scale NetFlow monitoring disk file based storage is not sufficient.
+	
+     \section{Packet Forwarding with \emph{netmap}\cite{spf}}
+     \paragraph\
+     This section describes about performance shortfalls of OpenVswitch \cite{ovs}, a study done by Luigi Rizzo and his team.
+     \emph{netmap} \cite{netmap} is a framework to reduce the cost of moving traffic between the hardware and the host stack. As our network
+     infrastructures moving from Fast Ethernet to Gigabit Ethernet and host stack APIs are not fast enough to handle such speed, 
+     framework like \emph{netmap} is essential for such environment. %\emph{netmap} implements zero copy packet forwarding using shared memory
+    % and data structures tune for fast packet receiving/forwarding.
+    \paragraph\
+    \emph{netmap} achieves efficient I/O by removing all unnecessary run time costs and system calls. \emph{netmap} exposes its API to userspace
+    processes and provides a shadow copies of NIC rings.  Memory regions containing \emph{netmap} rings and packet buffers is shared with a
+    process using $mmap$(). A user process can access NIC ring buffers directly, so transferring data can be done with zero copy operations.
+    \emph{netmap} has a small \emph{libpcap} compatible API for migrating existing application.% to migrate to \emph{netmap}
+     \paragraph\
+     OpenVswitch is a multi-layer, OpenFlow \cite{openflow} compliant virtual switch designed to automate network through programmatic extensions. OpenVswitch is currently 
+     heavily used for network virtualization. So performance analysis of OpenVswitch is critical as we are modifying it to support
+     scalable flow monitoring.
+     
+     Authors have used \emph{netmap} for \emph{libpcap} alternative to improve the performance of OpenVswitch from 65 Kpps to 1.3 Mpps.
+     After resolving few architectural limitations of OpenVswitch, authors have able to get three times performance improvement.
+     Table \ref{openvswitch-perf} shows the performance of OpenVswitch under various environment.\\
+     \begin{table}[th]   
+      \centering
+      \begin{tabular}{|l|r|}
+        \hline
+        {\bf Configuration} & {\bf Kpps}  \\ \hline      
+         Linux userspace     & 50          \\ \hline 
+         FreeBSD userspace   & 65          \\ \hline 
+         Linux Kernel        & 300         \\ \hline 
+         Optimize OpenVswitch + FreeBSD & 790  \\ \hline
+         Optimize OpenVswitch + FreeBSD + \emph{netmap} & 3050  \\ \hline
       
+         \end{tabular}
+       \caption{OpenVswitch Performance with \emph{netmap}}
+       \label{openvswitch-perf}
+     \end{table}
+     So from this table we can easily find impressive performance gain by OpenVswitch using \emph{netmap}.
+     This paper \cite{spf} also gives us internal architecture of OpenVswitch that helped to modify OpenVswitch
+     for our second approach to have scalable flow monitoring with $Vswitch$.
+     
+     
+     %\section{Virtual I/O for Virtual Machines with \emph{virtio} \cite{virtio}}
+     %\paragraph\
+      
+     
+     
+     
       \section{Summary}
       In this section I have discussed  available solutions for scalable flow monitoring. The issues with current solutions are 
       \begin{enumerate}
-       \item Lack of scalable storage.\cite{emc2}\cite{nfdump}.
+       \item Lack of scalable storage \cite{emc2} \cite{nfdump}.
        \item Lack of high availability data storage \cite{Lee}.
-       \item Real-time flow analysis is difficult with current systems. \cite{Lee}  
+       \item Real-time flow analysis is difficult with current systems \cite{Lee}.  
       \end{enumerate}
 
-      In the next chapter I describe the design and implementation of modified \emph{ntop}(a NetFlow collector) that tries to solve a few of these issues.
+      
+      In the next chapter I describe the design and implementation of modified \emph{ntop}(a NetFlow collector) that 
+      tries to solve a few of these issues.
       

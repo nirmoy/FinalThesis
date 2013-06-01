@@ -6,8 +6,10 @@
 \usepackage{url}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{graphics}
 \usepackage{subfigure}
 \usepackage{epstopdf}
+\epstopdfsetup{outdir=./}
 \epstopdfsetup{update}
 \usepackage{makeidx}
 \usepackage{float}
@@ -27,7 +29,7 @@
   \author{A Dissertation Submitted in partial fulfillment of the degree of \\
     \\{\Large Master of Technology}\\in\\{\Large Computer Science}\\\\\\By\\\bf{Nirmoy Das}
   \vspace*{.2in}\\
-    \includegraphics[scale=0.5]{uoh.eps}\\ \\
+    \includegraphics[scale=0.5]{uoh}\\ \\
 	School of Computer and Information  Sciences\\
 	University of Hyderabad, Gachibowli\\ 
 	Hyderabad - 500046, India\\ \\
@@ -67,7 +69,7 @@
 	{%certificate
 	\thispagestyle{empty}
 	\begin{center} 
-		\includegraphics[scale=0.5]{uoh.eps}
+		\includegraphics[scale=0.5]{uoh}
 		\textbf{\Large CERTIFICATE}  
 	\end{center}\vspace{.75in}
 
@@ -131,10 +133,10 @@
 %\input{introduction.tex}
 \chapter{\label{chap:survey}Related Work}
 \input{relatedwork.tex}
-\chapter{\label{chap:our-idea} Cassandra plugin for \emph{ntop}}
+\chapter{\label{chap:ntop} Cassandra plugin for \emph{ntop}}
 \input{chapter3.tex}
-%\chapter{\label{chap:Implementation}Results and Analysis}
-%\input{results.tex}
+\chapter{\label{chap:ovs}Scalable Flow Monitoring of OpenVswitch}
+\input{chapter4.tex}
 %\chapter{\label{chap:conclusion}Conclusions and Future Work}
 %\input{conclusion.tex}
 %\appendix
