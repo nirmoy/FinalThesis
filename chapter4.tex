@@ -102,17 +102,77 @@
 \section{Proposed Scalable Solution for Flow Monitoring}
 \paragraph\
     Currently OpenVswitch can exports NetFlow packets as UDP packets to a  collector like \emph{ntop} that receives NetFlow records then 
-    analysis them. UDP is connection less protocol, it does not guarantee reliable communication. Packets may get lost by \emph{ntop}
-    while processing because of socket buffer overflow. In previous chapter, our results shows that if \emph{ntop} has less socket buffer 
+    analysis them. UDP is connection less protocol, it does not guarantee reliable communication. Packets may get lost while \emph{ntop}
+    while process flow records because of socket buffer overflow. In previous chapter, our results shows that if \emph{ntop} has less socket buffer 
     it tent to losses packets. Our solution tries to avoid NetFlow collector all together allowing OpenVswitch host to store NetFlow
     records directly to scalable database, Cassandra. Now any NetFlow analysis tool can read flow records from the database and then analysis
-    them. As OpenVswitch is distributed in nature writing flow records directly from OpenVswitch host to Cassandra provides scalable
+    them. As OpenVswitch is distributed in nature writing flow records directly from OpenVswitch host to Cassandra, it provides scalable
     way to collect flow records. Cassandra is scalable and distributed database offer scalable storage for our solution.
     
     \subsection{Design}
     \paragraph\
 	Our solution uses shared memory for storing NetFlow records from OpenVswitch. Another Python program that checks the shared 
-	memory region for new flow records store them into Cassandra using $Pycassa$. By this we avoiding any NetFlow collector which can
-	become bottleneck. 
+	memory region for new flow records store them into Cassandra using $Pycassa$. By this we avoiding any NetFlow collector which can becomes bottleneck. There are three major component 
+	of our solution
+	\begin{enumerate}
+	 \item A shared memory based IPC.
+	 \item OpenVswitch modification to use shared memory IPC.
+	 \item A daemon that reads NetFlow packets from shared memory IPC and writes into Cassandra. 
+	\end{enumerate}
 
-    
+	\paragraph{SWSR, A shared memory IPC:} SWSR (Single Write Single Reader) provides set of API for inter process communication 
+	between two process. It uses shared memory for data buffering and semaphore for synchronization. Figure \ref{swsr} details out the
+	memory layout of the shared memory used in SWSR. Header section contains some meta-data require for synchronous access of the shared 
+	\begin{figure}[htb]
+	      \centering
+	      \includegraphics[scale=.35]{swsr}
+	      \caption{Memory Layout of SWSR.} 
+	      \label{swsr}
+	\end{figure}
+	memory. A bucket in data section holds a NetFlow packet of size 1500 bytes. Header sections fields are :
+	\begin{enumerate}
+	 \item total\_bucket: Total number of bucket in the data section.
+	 \item unread\_bucket: Total number of buckets remain full.
+	 \item read\_index: It points to the start of new NetFlow record.
+	 \item write\_bucket\_index: it points to start of a new empty bucket.
+	 \item write\_index; It points to start of a new empty memory space inside bucket.
+	\end{enumerate}
+	APIs supported by SWSR are :
+	\begin{enumerate}
+	 \item {\bf initSWSR}(name, isOwner, bucketSize, totalBucket): It creates shared memory, if $isOwner$ flag is set otherwise it opens shared memory with the name specified.
+	 \item {\bf isFull}(swsrname): It returns true if $swsrname$ is full otherwise returns false.
+	 \item {\bf isEmpty}(swsrname): It returns true if $swsrname$ is empty otherwise returns false.
+	 \item {\bf get\_write\_index}(swsrname): It returns memory reference of current write index.
+	 \item {\bf readSWSR}(swsrname, buffer): It fills the buffer the bucket referred by read\_index then decrease the unread\_bucket atomically.
+	 \item {\bf write\_finish}(swsrname): It increase the write\_index and write\_bucket\_index
+	 if there is empty buckets available otherwise it initialize write\_index to write\_bucket\_index. It will increase unread\_bucket atomically if where are empty buckets. 
+	\end{enumerate}
+	Figure \ref{swsrraed} and \ref{swsrwrite} describe read write operation in SWSR.
+	\begin{figure}[htb]
+	      \centering
+	      \includegraphics[scale=.35]{swsrwrite}
+	      \caption{Memory Layout of SWSR.} 
+	      \label{swsrwrite}
+	\end{figure}
+	SWSR IPC is used in OpenVswitch for writing NetFlow packets to shared memory.
+	\paragraph{OpenVswitch Modifications:} Generally OpenVswitch writes NetFlow packets into
+	packet buffer then to a UDP socket. Now modified OpenVswitch can write NetFlow packets
+	into SWSR memory. Functions used to add SWSR support to OpenVswitch are 
+	\begin{enumerate}
+	 \item {\bf create\_swsr}(): It calls initSWSR for creation of SWSR IPC.
+	 \item {\bf gen\_shm\_netflow\_rec}(): It writes NetFlow packets to SWSR IPC.
+	 \item {\bf shm\_netflow\_run}(): It calls write\_finish() to indicate NetFlow packet has been written successfully.
+	\end{enumerate}
+	\paragraph{NfCassaStore, A Python daemon:} NfCassaStore is python daemon that reads packets
+	from SWSR and writes into Cassandra. NfCassaStore consists of following components :
+	\begin{enumerate}
+	 \item Init(): Initialize SWSR IPC for reading.
+	 \item run(): It is infinite loop that waits for new packet and then call processPacket().
+	 \item processPacket(): It process NetFlow packet and store into Cassandra.
+	\end{enumerate}
+      \paragraph\
+      These three components completes our solutions. In the next section I describe about our test
+      result done on the modified OpenVswitch.
+	
+
+
