@@ -1,451 +1,112 @@
 \paragraph\
-We have implemented our protocol in network simulator \textit{ns-2.29} to prove its efficiency. In this chapter we present the simulation results of our scheme. We also compare our results with that of the schemes like ASAP\cite{asap} which maintains per flow state information and SWAN\cite{swan} which does not maintain any state information. These are already implemented in another \textit{ns} version. I have ported these to \textit{ns-2.29} version. Our scheme has features of these two schemes like QoS guarantee feature of ASAP\cite{asap} and scalable property of SWAN\cite{swan}. For ASAP we did simulations with adaptation and without adaptation. In the first section we present the simulation environment and also some of the tests done to confirm the correctness of implementation of our protocol. We also present some other experiments we did to understand the results we got. In the second section we present the simulation results and discuss them. In the last section we summarize the results and analysis.
-
-\section{Simulation Environment and Scenarios}
-\subsection{Simulation Environment}
-\paragraph\
-The Simulation environment is as described in table \ref{simulation}. All the simulations are done in \textit{ns-2.29}. A MANET with variable density of 50 nodes, 75 nodes, 100 nodes was used with a simulation time of 150 sec. The mobile nodes were placed in a 1000 $\times$ 1000 m flat grid. The mobility of the nodes was in the range of 0-5m/s. We have varied the pause time for the nodes as 5 sec, 15 sec and 30 sec. We have used a random way point mobility model. In this model, each mobile node starts its journey from current location to a random destination  location with a specified speed. Once the destination is reached, the mobile node will stay there for the amount of pause time specified and then starts moving towards the new destination location. Each scenario is repeated ten times by varying different source-destination pairs.
-
-\begin{table*}[t]
-\caption{Simulation Environment}
-\begin{center}
-\begin{tabular}[t]{|p{18pt}|p{185pt}|p{185pt}|} \hline
-\label{simulation}
- \emph{\textbf{\scriptsize S.No.}} & \emph{\textbf{\scriptsize Parameters }} & \emph{\textbf{\scriptsize Values}}\\
-\hline
-\emph{\textbf{\scriptsize 1}} & \emph{\textbf{\scriptsize Area }} & \emph{\textbf{\scriptsize 1000 X 1000}}\\
-\hline
-\emph{\textbf{\scriptsize 2}} & \emph{\textbf{\scriptsize Transmission range }} & \emph{\textbf{\scriptsize 250m}}\\
-\hline
-\emph{\textbf{\scriptsize 3}} & \emph{\textbf{\scriptsize Nodes }} & \emph{\textbf{\scriptsize 50, 75, 100}}\\
-\hline
-\emph{\textbf{\scriptsize 4}} & \emph{\textbf{\scriptsize Pause time }} & \emph{\textbf{\scriptsize 5, 15, 30 sec}}\\
-\hline
-\emph{\textbf{\scriptsize 5}} & \emph{\textbf{\scriptsize Mobility }} & \emph{\textbf{\scriptsize 0- 5m/s}}\\
-\hline
-\emph{\textbf{\scriptsize 6}} & \emph{\textbf{\scriptsize Simulation time }} & \emph{\textbf{\scriptsize 150 sec}}\\
-\hline
-\emph{\textbf{\scriptsize 7}} & \emph{\textbf{\scriptsize Link capacity }} & \emph{\textbf{\scriptsize 2 Mb/sec}}\\
-\hline
-\emph{\textbf{\scriptsize 8}} & \emph{\textbf{\scriptsize Mobility model }} & \emph{\textbf{\scriptsize   Random way point}}\\
-\hline
-\emph{\textbf{\scriptsize 9}} & \emph{\textbf{\scriptsize Traffic type }} & \emph{\textbf{\scriptsize Constant Bit Rate(CBR)}}\\
-\hline
-\end{tabular} \end{center} \end{table*}
-
-\subsection{Performance Metrics}
-To evaluate the performance of the schemes, we have measured the following metrics.
-\paragraph*{Call acceptance ratio}
-This is the ratio between the number of flows accepted in the network to the number of flows initiated at the sources. But ASAP, instead of rejecting flows whenever there is no sufficient minimum bandwidth on the links, treats them as best-effort flows. So, when calculating call acceptance ratio for ASAP we are treating these best-effort flows as rejected flows.
-\paragraph*{Throughput}
-It is defined as the number of bits received at the destination per second. We calculated average throughput for each QoS level and compared it with the corresponding flow's committed rate.
-\paragraph*{Packet delivery ratio}
-This is the ratio between the number of data packets received at the destinations and the number of data packets generated at the sources. This metric indicates the reliability of admitted flows.
-\paragraph*{Latency to start data plane operations}
-This is the time duration between the time when the first data packet was generated to when it was transmitted in the network at the sources. Actually for cross-layer schemes like DiffQ-DSR it is the time taken to find the route to the destination and reserve the resources on that path. For non-cross-layer schemes, it includes the route discovery time followed by resource reservation signaling time.
-\paragraph*{Average end-to-end delay}
-It is defined as latency incurred by the packets between their generation time and their arrival time at the destination.
-\paragraph*{Scalability}
-It is the one of the important parameters for MANETs. As the number of flows increase, the processing and storage overhead should not be increased. So in this perspective we compare our scheme with other schemes.
-
-\subsection{Scenarios}
-\paragraph\
-We have done some test experiments to test the correctness of our protocol and to fix the bugs. The QoS levels and their corresponding DSCPs are shown in Table \ref{levels}.
-\begin{table*}[t]
-\caption{QoS class levels and corresponding DSCP values}
-\begin{center}
-\begin{tabular}[t]{|p{75pt}|p{75pt}|p{75pt}|p{75pt}|p{75pt}|} \hline
-\label{levels}
-\emph{\textbf{\scriptsize Classes }} & \emph{\textbf{\scriptsize Range(kbps}} & \emph{\textbf{\scriptsize Initial codepoint}} & \emph{\textbf{\scriptsize Downgrade-1}} & \emph{\textbf{\scriptsize Downgrade-2}}\\
-\hline
-\emph{\textbf{\scriptsize Class-1 }} & \emph{\textbf{\scriptsize best-effort}} & \emph{\textbf{\scriptsize 0}} & \emph{\textbf{\scriptsize 0}} & \emph{\textbf{\scriptsize 0}}\\
-\hline
-\emph{\textbf{\scriptsize Class-2 }} & \emph{\textbf{\scriptsize 8-16}} & \emph{\textbf{\scriptsize 10}} & \emph{\textbf{\scriptsize 12}} & \emph{\textbf{\scriptsize 14}}\\
-\hline
-\emph{\textbf{\scriptsize Class-3 }} & \emph{\textbf{\scriptsize 16-32}} & \emph{\textbf{\scriptsize 18}} & \emph{\textbf{\scriptsize 20}} & \emph{\textbf{\scriptsize 22}}\\
-\hline
-\emph{\textbf{\scriptsize Class-4 }} & \emph{\textbf{\scriptsize 64-128}} & \emph{\textbf{\scriptsize 26}} & \emph{\textbf{\scriptsize 28}} & \emph{\textbf{\scriptsize 30}}\\
-\hline
-\end{tabular} \end{center} \end{table*}
-
-\subsubsection{Basic QoS Scenarios}
-\paragraph\
-The scenarios we have done are
-
-\begin{enumerate}
-\item As shown in Figure \ref{interference} we have taken three static nodes 1, 2 and 3. We have started a flow which belongs to class-3 and send data at the rate of 64kbps which is its committed rate i.e at its minimum bandwidth requirement. We calculated its throughput and we got 64kbps and all its packets are marked with  code point 26. Now we have started this flow at the rate 90kbps which is in between its committed rate and peak rate. Now the packets which are coming above committed rate are marked as 28. Again I have started the flow at 150kbps which is above its peak rate. In this case the packets which are sent at above peak rate are marked as 30. But in the last two cases we got the throughput as 90kbps and 150kbps respectively as there is no congestion.
-\item Now we increased the number of flows and experimented with different sending rates. We observed that when congestion occurs, the packets were dropped according to their drop precedence.
-\item In the third scenario, I have taken two flows which belong to the same QoS level and started one flow at its committed rate and and another flow at above peak rate. Then I observed the packets of the flow which is sending at its committed rate also are marked with codepoint 30 and these packets are dropped. This is because both flows belong to the same QoS class and our scheme is per class QoS provisioning.
-\item In the fourth scenario I have taken more flows such that only some of them are accepted. And after some time I have stopped some of the accepted flows. Then I observed that the flows which are not admitted initially get admitted after session record timeout period of stopped flows. This is because the reserved bandwidth of the stopped flows is reclaimed to available bandwidth after the session record timeout period only.
-\end{enumerate}
-
-\subsubsection{Effect of Interference on QoS}
-\paragraph\
-We did another small experiment to know the effect of interference on QoS achieved.
-\paragraph\
-As shown in Figure \ref{interference} we have taken six static nodes such that 1, 2 and 3 nodes are in the transmission range of each other and 4, 5 and 6 nodes as one set. None of the sets are in interference range of each other. Then we have started a flow between 1 and 3 and another flow between 4 and 6 at the rate of 64kbps. We got the throughput for each flow as 64kbps.
+In this chapter we have tested scalability of \emph{ntop} with RRDTool, \emph{ntop} with cassandra and  Open vSwitch with Cassandra. We have used 32KB, 64KB, 128KB socket buffer for \emph{ntop} and SWSR IPC buffer for Open vSwitch to test behavior of our solutions. Using \emph{netperf} \cite{netperf} tool we have generated traffic. 
 
 \paragraph\
- Now as shown in Figure \ref{interference1}, we have placed node 5 in the interference range of node 2. Then we observed that the throughput for the second flow is zero.
+In the first section we present \emph{netperf} tool. In Section \ref{testbed}, we present our test environment. We have presented results and
+discussion in the Section \ref{result_and_Dis}. Finally we conclude with Section \ref{Result_conclusion}.
 
+\section{\emph{netperf}} \label{etperf}
 \paragraph\
-By this experiment we can conclude that, even though we are assuring the flows at their committed rate we are not achieving this because of interference effect. So for providing QoS in MANETs, we need to provide some solutions at MAC layer also.
-
-\begin{figure}[!h]
-\centering
-\subfigure[4, 5, 6 nodes are not in the interference range of 1,2, 3 nodes]{
-\includegraphics[scale=0.23]{figures/interference.eps}
-\label{interference}
-}
-\hspace{2cm}
-\subfigure[node 5 is in the interference range of node 2]{
-\includegraphics[scale=0.23]{figures/interference1.eps}
-\label{interference1}
-}
-\caption{Interference Experiment}
-\end{figure}
-
-\section{Simulation Results and Discussion}
+	\emph{netperf} is a benchmark tool that can be use to measure various aspect of networking performance. The primary focus are bulk  data transfer and request/response performance using either TCP or UDP and the Berkeley Sockets interface. Using \emph{netperf} we can perform following 
+	tests \cite{netperf}
+	\begin{enumerate}
+	 \item TCP and UDP unidirectional transfer and request/response over IPv4 and IPv6 using the Sockets interface. 
+	 \item TCP and UDP unidirectional transfer and request/response over IPv4 using the XTI interface. 
+	 \item Link-level unidirectional transfer and request/response using the DLPI interface. 
+	 \item Unix domain sockets.
+	 \item SCTP unidirectional transfer and request/response over IPv4 and IPv6 using the sockets interface. 
+	\end{enumerate}
 \paragraph\
-In this section, we present the results of simulations done to measure the performance of our scheme in comparison with ASAP and SWAN. Each of the following sections is a discussion of the performance with respect to the parameters identified earlier.
+	TCP Connect/Request/Response measures the performance of establishing a connection, exchanging a single request/response transaction, and tearing-down that connection. TCP\_CRR creates two new flow for every request/response transaction. In a TCP\_CRR performance test, a \emph{netperf} 	creates lots of flow which can be monitored by Open vSwitch or any other NetFlow enabled router/switch. Using TCP\_CRR we simulate a heavy loaded network in our lab. In the next section we present our testbed that uses \emph{netperf} for generating NetFlow packets for our tests. 
 
-\subsection{Throughput and Packet Delivery Ratio }
+\section{Test Environment Setup} \label{testbed}
+	Our test environment contains multiple components as described in the Table \ref{table_testbed}. We have use KVM, Open vSwitch to create virtual network that generates NetFlow packets using Open vSwitch. Figure \ref{figure_testbed} illustrate our experimental testbed. Each of our system Sys-1, 2, 3, 4 are running OpenSuse-12.2(Linux 3.4 kernel). Sys-1 and 2 are using latest version of KVM. Sys-1 and 2 have 5 virtual machines each of them running 25 \emph{netperf} clients.% Ma'am I'm not able form the next sentense properly
+	one VM each from both Sys-1 and Sys-2 forms five pairs of VM. Each pairs of VM have 25 \emph{netperf} clients each sending traffic to each other. With 25 \emph{netperf} running on both Sys-1 and Sys-2, we get approximately 1000 NetFlow packets/second. Figure \ref{peakNetperf} illustrates out claim. So all together the testbed runs 250 \emph{netperf} clients. In the next section we describe about our tests that we have done using this testbed.
+	\begin{table}
+	\centering
+	 \begin{tabular}{|l|l|}
+	  \hline
+	  \textbf{Component Name} & \textbf{Details/Version} \\ \hline
+	  CPU   & Intel(R) Core(TM) i5-2400 CPU @ 3.10GHz. \\ \hline
+	  Operating System & OpenSuse 12.2 \\ \hline
+	  Linux Kernel & 3.4 \\ \hline
+	  KVM          & kvm-1.1.1-1.8.1 \\ \hline
+	  Open vSwitch & openvswitch-1.9.0(LTS) \\ \hline
+	  \emph{netperf} & netperf-2.6 \\ \hline
+	  \emph{ntop}    & ntop-5.0.1 \\ \hline
+	  Cassandra      & Apache-cassndra-1.2.5 \\ \hline	  
+	 \end{tabular}
+	  \label{table_testbed}
+	  \caption{Components of Our Testbed}
+	\end{table}
+
+	\begin{figure}[htb]
+	  \centering
+	  \includegraphics[scale=.3]{testbed}
+	  \caption{Evaluation Testbed } 
+	  \label{figure_testbed}
+	\end{figure}
+	\begin{figure}[htb]
+	  \centering
+	  \includegraphics[scale=1]{data/peaknetperf}
+	  \caption{NetFlow Packet generated with \emph{netperf}} 
+	  \label{peakNetperf}
+	\end{figure}
+	
+\section{Analysis and Discussion of Test Results} \label{result_and_Dis}
 \paragraph\
-In this simulation, we are using the QoS levels which are shown in Table \ref{levels}. We have taken total five flows and from these flows, two flows belong to Committed Rate(CR) of 8kbps and two flows belong to CR of 16kbps and the remaining flow belongs to CR of 64kbps. These flows are sent at their minimum bandwidth requirement. The traffic of these flows is of type Constant Bit Rate(CBR) and the packet size is 125 bytes. The exact same configuration is taken for ASAP\cite{asap} and SWAN\cite{swan}. We did simulations for ASAP with and without adaptation enabled. To do simulation of ASAP without adaptation, we have taken the refresh time period as total simulation time. We have simulated each scenario about 5 times by varying the source and destination pairs for the connections. We measured the average cumulative throughput and packet delivery ratio for each QoS level. This is done to reduce variance of the results obtained.
+	We have tested scalability of the following conditions with various socket buffer SWSR IPC buffer sizes. 
+	\begin{enumerate}
+	 \item \emph{ntop} and RRDTool.
+	 \item \emph{ntop} storing NetFlow records to Cassandra.
+	 \item Open vSwitch storing into NetFlow records directly into Cassandra.
+	\end{enumerate}
+	\paragraph{\emph{ntop} and RRDTool:} In this test, we have generated NetFlow packets with Sys-1 and Sys-2 and Open vSwitch 
+	of Sys-2 exports NetFlow packets to \emph{ntop} running on Sys-3. \emph{ntop} uses RRDTool to analysis and store NetFlow
+	statistics.
+	\paragraph{\emph{ntop} and Cassandra:} In this test, we have run the similar test excepts Cassandra us used to store NetFlow records.
+	\paragraph{Open vSwitch and Cassandra:} In this test, Open vSwitch stores NetFlow records directly using NfCassaStore as described in pervious chapter.
+	 
+	\subsection{Analysis of the Graphs}
+	\paragraph\
+		Figure \ref{graph32}, \ref{graph64} and \ref{graph128} illustrate about number of packet drops in all three test cases with buffer size 32KB, 64KB and 128KB. Number of drops with RRDTool is very less with respect to other two.
+		Open vSwitch with Cassandra tests improves better than \emph{ntop} storing into Cassandra if we increase amount of buffer. 
+	\begin{figure}[!htb]
+	    \centering
+	    \includegraphics[scale=1]{data/out32}
+	    \caption{Packet Drops with 32 KB Socket and IPC buffer size} 
+	    \label{graph32}
+	  \end{figure}
+	
+	  \begin{figure}[!htb]
+	    \centering
+	    \includegraphics[scale=1]{data/out64}
+	    \caption{Packet Drops with 64 KB Socket and IPC buffer size } 
+	  \label{graph64}
+	  \end{figure}
+	  
+	  \begin{figure}[!htb]
+	    \centering
+	    \includegraphics[scale=1]{data/out128}
+	    \caption{Packet Drops with 128 KB Socket and IPC buffer size} 
+	    \label{graph128}
+	  \end{figure}
+	  If we look at the detail operations that take place during our three tests, we may get more insights to analyze the results.
+	  Operations done by \emph{ntop} with RRDTool:
+	  \begin{enumerate}
+	   \item Read NetFlow Packets from socket.
+	   \item Analysis NetFlow packets 
+	   \item Store NetFlow statistics into RRD with disk write.
+	  \end{enumerate}
+	  \emph{ntop} with Cassandra does similar operations except it stores NetFlow records into Cassandra using our Cassandra C client.
+	  On the other hand Open vSwitch use \emph{Pycassa} to store NetFlow records into Cassandra. In both case, \emph{ntop} with RRDTool and Open vSwitch with Cassandra, a NetFlow packet pass thorugh network once and then stored into disk. In \emph{ntop} with Cassandra test, a Netflow packet has to pass through network twice, that explains why \emph{ntop} with Cassandra drops more packets than other two. \emph{ntop} with RRDTool is faster because RRDTool is written in c and dynamically linked with \emph{ntop}. Open vSwitch use Python, which is interpreted language and slower than
+	  C.
+	  \emph{ntop} with Cassandra does not improve its performance much with compare with Open vSwitch even we increase Socket buffer size.
+	  \emph{ntop} uses our own Cassandra C client for storing data into Cassandra. Cassandra C client has pass through multiple layers of API calls (C-Python API, $Pycassa$ API, thrift API)	before reaching to Cassandra which is one reason for bad performance of \emph{ntop} with Cassandra. 
+	  \paragraph\
+	  
+	  
+	  
 
-\subsubsection{Low Density Scenario}
-\paragraph\
-Figures \ref{50n5cthro} and \ref{50n5cpdr} show respectively, the average cumulative throughput and packet delivery ratio for ASAP with adaptation, ASAP without adaptation, SWAN and DiffQ-DSR for the density of 50 nodes with 5 pause time respectively. From the graphs we can observe that
-
-\begin{itemize}
-\item DiffQ-DSR is giving more QoS guarantee than SWAN.
-\item When we compare with ASAP with adaptation, for low priority levels it is giving more throughput than ours but it is not at all giving minimum assurance throughput for high priority level.
-\item Coming to comparison with ASAP with no adaptation, for all the levels it has higher throughput than our scheme. But this is because ASAP sends its flows at their maximum bandwidth requirement, i.e. its sending rate is higher leading to a higher throughput. We can observe from Figure \ref{50n5cpdr} that the packet delivery ratio of ASAP with no adaptation is less than that of DiffQ-DSR. So, we can say that the performance of DiffQ-DSR is better overall.
-\end{itemize}
-
-\paragraph\
-Figures \ref{50n15pthro} and \ref{50n15ppdr} show the average cumulative throughput and packet delivery ratio for 50 nodes with 15 pause time. From the graphs we can observe that DiffQ-DSR has slightly less throughput and packet delivery ratio than other schemes for low priority levels. But it has more throughput and packet delivery ratio for high priority levels than other schemes. That means DiffQ-DSR is giving more preference to high priority flows, which is good from the perspective of QoS.
-
-\paragraph\
-The average throughput and packet delivery ratio for the density of 50 nodes with 30 pause time are shown in Figures \ref{50n30pthro} and \ref{50n30ppdr} respectively. From the graphs we can observe that DiffQ-DSR has more throughput and more packet delivery ratio than other schemes for medium and high priority flows.
-
-\paragraph\
-Finally when we compare with committed rates, DiffQ-DSR is giving throughputs for high priority flow whose committed rate is 64kbps as 56, 55, 44kbps for pause times 5, 15 ad 30 respectively.
-
-
-\twocolumn
-
-\begin{figure}[!t]
-\centering
-\subfigure[5 pause time]{
-\includegraphics[scale=0.60]{figures/50n5connthro.eps}
-\label{50n5cthro}
-}\\
-\subfigure[15 pause time]{
-\includegraphics[scale=0.60]{15pconn/50n15pthro.eps}
-\label{50n15pthro}
-}\\
-\subfigure[30 pause time]{
-\includegraphics[scale=0.60]{30pconn/50n30pthro.eps}
-\label{50n30pthro}
-}
-\caption{Average Throughput for each QoS level for the density of 50 nodes}
-\end{figure}
-
-\begin{figure}[!t]
-\centering
-\subfigure[5 pause time]{
-\includegraphics[scale=0.60]{figures/50n5connpdr.eps}
-\label{50n5cpdr}
-}\\
-\subfigure[15 pause time]{
-\includegraphics[scale=0.60]{15pconn/50n15ppdr.eps}
-\label{50n15ppdr}
-}\\
-\subfigure[30 pause time]{
-\includegraphics[scale=0.60]{30pconn/50n30ppdr.eps}
-\label{50n30ppdr}
-}
-\caption{PDR for each QoS level for the density of 50 nodes}
-\end{figure}
-
-\onecolumn
-
-\subsubsection{Medium Density Scenario}
-\paragraph\
-Figures \ref{75n5cthro}, \ref{75n15pthro} and \ref{75n30pthro} show the average throughput for 75 nodes with pause times 5, 15 and 30 respectively. From the graphs we can see that DiffQ-DSR has more throughput than other schemes for high priority flows for all the pause times even though it has low throughput for low priority levels. This clearly shows that DiffQ-DSR is giving more preference to high priority flows as already stated in the previous section. But all schemes are giving less throughput than the assured QoS for the high priority level except in case of 15 pause time. This is because as the density increases, interference from the nodes increases. We have already explained the effect of interference on the throughput of flows. The experiment we did to know the interference effect is for static nodes and in that the second flow's throughput is almost zero. But here nodes are moving; so we are getting some throughput.
-
-\paragraph\
-Figures \ref{75n5cpdr}, \ref{75n15ppdr} and \ref{75n30ppdr} show the packet delivery ratio for all schemes with pause times 5, 15 and 30 respectively. Graphs show that the packet delivery ratio for DiffQ-DSR is more than the other schemes.
-
-\subsubsection{High Density Scenario}
-\paragraph\
-Figures \ref{100n5cthro} and \ref{100n5cpdr} show the average throughput and packet delivery ratio for each QoS level respectively for 100 node density with 5 pause time. In the case of 100 nodes SWAN throughput for the high priority level is slightly higher than DiffQ-DSR but it is not that much significant. The same behavior is observed across ASAP and DiffQ-DSR as in case of 50 nodes. 
-
-\paragraph\
-In case of 15 pause time, DiffQ-DSR has more throughput and more packet delivery ratio than other schemes except for low priority level. This is shown in Figures \ref{100n15pthro} and \ref{100n15ppdr}. Figures \ref{100n30pthro} and \ref{100n30ppdr} show the throughput and packet delivery ratio for 30 pause time. From the graphs we can see that ASAP with no adaptation has more throughput than DiffQ-DSR. But at the same time it has less packet delivery ratio than DiffQ-DSR i.e. it has more packet loss than DiffQ-DSR. Actually, ASAP with no adaptation is sending  data at the rate of 128kbps and it is getting 77kbps throughput for class-4. But DiffQ-DSR is sending data at the rate of 64kbps and it is getting 59kbps throughput. That means ASAP with no adaptation has 51kbps loss  whereas DiffQ-DSR has 5kbps loss only.
-
-\twocolumn
-
-\begin{figure}[!t]
-\centering
-\subfigure[5 pause time]{
-\includegraphics[scale=0.60]{figures/75n5connthro.eps}
-\label{75n5cthro}
-}\\
-\subfigure[15 pause time]{
-\includegraphics[scale=0.60]{15pconn/75n15pthro.eps}
-\label{75n15pthro}
-}\\
-\subfigure[30 pause time]{
-\includegraphics[scale=0.60]{30pconn/75n30pthro.eps}
-\label{75n30pthro}
-}
-\caption{Average Throughput for each QoS level for the density of 75 nodes}
-\end{figure}
-
-\begin{figure}[!t]
-\centering
-\subfigure[5 pause time]{
-\includegraphics[scale=0.60]{figures/75n5connpdr.eps}
-\label{75n5cpdr}
-}\\
-\subfigure[15 pause time]{
-\includegraphics[scale=0.60]{15pconn/75n15ppdr.eps}
-\label{75n15ppdr}
-}\\
-\subfigure[30 pause time]{
-\includegraphics[scale=0.60]{30pconn/75n30ppdr.eps}
-\label{75n30ppdr}
-}
-\caption{PDR for each QoS level for the density of 75 nodes}
-\end{figure}
-
-\onecolumn
-
-\twocolumn
-
-\begin{figure}[!t]
-\centering
-\subfigure[5 pause time]{
-\includegraphics[scale=0.60]{figures/100n5connthro.eps}
-\label{100n5cthro}
-}\\
-\subfigure[15 pause time]{
-\includegraphics[scale=0.60]{15pconn/100n15pthro.eps}
-\label{100n15pthro}
-}\\
-\subfigure[30 pause time]{
-\includegraphics[scale=0.60]{30pconn/100n30pthro.eps}
-\label{100n30pthro}
-}
-\caption{Average Throughput for each QoS level for the density of 100 nodes}
-\end{figure}
-
-\begin{figure}[!t]
-\centering
-\subfigure[5 pause time]{
-\includegraphics[scale=0.60]{figures/100n5connpdr.eps}
-\label{100n5cpdr}
-}\\
-\subfigure[15 pause time]{
-\includegraphics[scale=0.60]{15pconn/100n15ppdr.eps}
-\label{100n15ppdr}
-}\\
-\subfigure[30 pause time]{
-\includegraphics[scale=0.60]{30pconn/100n30ppdr.eps}
-\label{100n30ppdr}
-}
-\caption{PDR for each QoS level for the density of 100 nodes}
-\end{figure}
-
-\onecolumn
-
-\subsection{Comparison of guaranteed QoS}
-\paragraph\
-We did an experiment to understand how much QoS guarantee is given to the flows by the protocols when there is congestion, we did an experiment. As shown in Figure \ref{interference}, we have taken three static nodes 1, 2 and 3 which are in the transmission range of each other. We have started two flows between 1 and 3 in which one flow(f1) with CR of 16kbps and another flow(f2) with CR of 64kbps. We are sending these flows at the rate of 300kbps and 64kbps respectively. Now we calculated the throughput of each flow in each protocol and the result is as follows:\\
-\textit{In ASAP} : Both flows are getting throughput at their maximum bandwidth requirement. ASAP is not allowing more than the flow's maximum bandwidth(32kbps and 128kbps) even though it has available bandwidth.\\
-\textit{In SWAN} : Because of misbehavior of one flow, SWAN degrades the throughput of the other flow also. This is because it does not reserve any resources for any flow. So it is not giving any QoS guarantee when congestion occurs.\\
-\textit{In DiffQ-DSR} : The flow f1 which is misbehaving only gets affected and the other flow is getting its QoS assurance. But in this scheme also, if both the flows belong to the same class and in that one is misbehaving, then both the flows get affected. This is because we are providing per class QoS provisioning and is similar in effect to Diffserv.
-
-\subsection{Call Acceptance Ratio(CAR)}
-\paragraph\
-We calculate call acceptance ratio in our scheme as the number of flows accepted. In ASAP, all flows are accepted, but as Best-Effort(BE) if QoS can not be satisfied. So we calculate CAR as 
-
-\begin{equation}
-\frac{number of flows - number of flows accepted as BE}{number of flows}
-\end{equation}
-
-We are unable to find a way of determining call acceptance ratio for SWAN. So we are not presenting call acceptance ratio for SWAN. We have done simulations by varying number of flows for each density. We have taken all these flows with CR of 64kbps. These results are presented in Figures \ref{50ncar} and \ref{100ncar}  
-
-\begin{figure}[!h]
-\centering
-\subfigure[Density of 50 nodes]{
-\includegraphics[scale=0.57]{figures/50ncar.eps}
-\label{50ncar}
-} 
-\subfigure[Density of 100 nodes]{
-\includegraphics[scale=0.57]{figures/100ncar.eps}
-\label{100ncar}
-}
-\caption{Call acceptance ratio by varying number of the flows}
-\end{figure}
-
-
-
-\paragraph\
-From the figures we can observe that call acceptance ratio for DiffQ-DSR is higher than ASAP. This is because of the following reason: ASAP reserves the resources up to the flow's maximum bandwidth requirement if it has sufficient bandwidth whereas we are reserving only minimum bandwidth requirement of the flow. However DiffQ-DSR transmits packets at peak rate also as along as bandwidth is available, but marks them with higher drop precedence.
-
-\paragraph\
-As density increases DiffQ-DSR's call acceptance ratio decreases. This is because as density increases the QRREP packets may be dropped more because of collisions. So less number of flows get accepted. But even in this case, the call acceptance ratio of DiffQ-DSR is more than the call acceptance ratio of ASAP without adaptation. 
-
-\subsection{Latency to Start Data Plane Operations}
-\paragraph\
- Figures \ref{50n5clat}, \ref{75n5clat} and \ref{100n5clat} show the  average latency to start data plane operations of all the five connections for 50, 75 and 100 nodes respectively for pause times 5, 15 and 30 sec respectively. Here we are not presenting latency of SWAN because we are unable to find that parameter from the implementation that I have downloaded for SWAN. 
-
-%\twocolumn
-\begin{figure}
-\centering
-\subfigure[Density of 50 nodes with 5 connections]{
-\includegraphics[scale=0.7]{50n5c/5clatency.eps}
-\label{50n5clat}
-} 
-\hspace{2cm}
-\subfigure[Density of 75 nodes with 5 connections]{
-\includegraphics[scale=0.7]{75n5c/5clatency.eps}
-\label{75n5clat}
-} \\
-\subfigure[Density of 100 nodes with 5 connections]{
-\includegraphics[scale=0.7]{100n5c/5clatency.eps}
-\label{100n5clat}
-} \\
-\caption{Latency to start data plane operations}
-\end{figure}
-
-%\onecolumn
-
-\paragraph\
-Actually the latency for DiffQ-DSR in the graph represents the time taken to find the route and to reserve the resources whereas, the latency for ASAP in the graph represents the time taken to find the route only. This is because in the implementation of ASAP that I have downloaded, data packets are sent even before reserving the resources on the path. In some scenarios DiffQ-DSR latency is higher than ASAP latency. But if we consider the time taken for reserving resources in ASAP, it should be higher than that of DiffQ-DSR.
-
-\subsection{Scalability}
-\paragraph\
-In this experiment we have done simulation for the density of 50 nodes with 15 connections for DiffQ-DSR and ASAP. The QoS levels we have taken for this simulation are shown in Table \ref{level3}. We changed the application rates so that more connections can be started without saturating the network. This will allow us to determine the effect of scalability properly since the number of queues maintained by DiffQ-DSR is one fourth that of ASAP. Among 15 connections, we have taken 5 connections of class-2 type, 5 connections of class-3 type and remaining 5 connections of class-4 type. The cumulative throughput for each QoS level is shown in Figure \ref{50n15cthro}
-
-\begin{table*}[t]
-\caption{QoS class levels }
-\begin{center}
-\begin{tabular}[t]{|p{100pt}|p{100pt}|} \hline
-\label{level3}
-\emph{\textbf{\scriptsize Classes }} & \emph{\textbf{\scriptsize Range(kbps}}\\
-\hline
-\emph{\textbf{\scriptsize Class-1 }} & \emph{\textbf{\scriptsize best-effort}}\\
-\hline
-\emph{\textbf{\scriptsize Class-2 }} & \emph{\textbf{\scriptsize 2-4}}\\
-\hline
-\emph{\textbf{\scriptsize Class-3 }} & \emph{\textbf{\scriptsize 4-8}}\\
-\hline
-\emph{\textbf{\scriptsize Class-4 }} & \emph{\textbf{\scriptsize 16-32}}\\
-\hline
-\end{tabular} \end{center} \end{table*}
-
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[scale=0.7]{figures/50n15cthro.eps}
-\caption{Average Throughput for each QoS level for the density of 50 nodes with 15 connections}
-\label{50n15cthro}
-\end{figure}
-
-\paragraph\
-The number of meters, policers and queues used by DiffQ-DSR is restricted to number of QoS levels i.e here it is 4, whereas in ASAP as there are 15 connections, it uses that many number of meters, policers and queues at nodes. That means DiffQ-DSR drastically reduces the processing and storage overhead at every node as number of connections increases. This is more important in power constrained MANETs. From the Figure \ref{50n15cthro} we can observe that throughput for DiffQ-DSR is less than the throughput of ASAP with no adaptation. This is because as we have already explained in the previous sections, ASAP with no adaptation sends date at the rate of flow's maximum bandwidth requirement(32kbps). In the implementation, we do not know how to control sending rate of ASAP with no adaptation. So, we just increased the sending rate of DiffQ-DSR to flow's maximum bandwidth requirement and calculated the throughput. Then we observed that it is greater than the throughput of ASAP with no adaptation. This is shown in Figure \ref{50n15cthro} for CR-16k. In DiffQ-DSR the average cumulative throughput for class-4 is 10kbps whereas its committed rate is 16kbps. This is because among the 5 flows of class-4 some flows are affected more by interference and their throughput is around 3-4kbps. So because of these flows we are getting average throughput less than the committed rate.
-
-\subsection{Average End-to-End Delay}
-\paragraph\
-End-to-end delay is calculated as the difference between the time of reception at the destination and time of transmission at source. So, all packets that are lost are not considered as part of end-to-end delay. Figures \ref{50ndelay}, \ref{75ndelay} and \ref{100ndelay} show the average end-to-end delay for five flows for 50, 75 and 100 nodes respectively with different pause times. Among 5 flows, two flows belong to CR of 16kbps and two flows belong to CR-32kbps and and the remaining flow belongs to CR of 64kbps. All these flows are of type CBR traffic. This simulation is done for only one sample. From the graphs we can observe that
-
-\begin{enumerate}
- \item The end-to-end delay for DiffQ-DSR is less than that of ASAP in all the cases. This is because in DiffQ-DSR the data plane operations at intermediate nodes are very light weight whereas in ASAP they are not. ASAP is a per flow mechanism and it needs to classify each packet of every flow to enqueue into the corresponding queue at intermediate nodes also. ASAP inserts a new option into the IP header to carry the flow ID with every packet and uses this to identify the queue for that flow. As flows increase, the number of queues maintained per node also increases and the overhead to process all these queues increases. In DiffQ-DSR, intermediate nodes just check the DSCP of packets and enqueue in to the corresponding queue. The overhead to process the queues is also less because the number of queues maintained per node are restricted to number of QoS levels.
-\item The end-to-end delay of SWAN is worse than DiffQ-DSR except for 100 nodes with 5 and 15 pause times.
-SWAN estimates congestion in the network by maintaining a running average of latency to transmit a packet at the MAC layer. This leads to overhead at nodes. SWAN treats all CBR flows as real-time traffic and enqueue all packets into the single queue. Because of this, queue length increases and packets in the  queue are delayed for transmission.
-\end{enumerate}
-
-\begin{figure}[!h]
-\centering
-\subfigure[Density of 50 nodes]{
-\includegraphics[scale=0.57]{delay/50ndelay.eps}
-\label{50ndelay}
-}
-\subfigure[Density of 75 nodes]{
-\includegraphics[scale=0.57]{delay/75ndelay.eps}
-\label{75ndelay}
-}
-\subfigure[Density of 100 nodes]{
-\includegraphics[scale=0.57]{delay/100ndelay.eps}
-\label{100ndelay}
-}
-\caption{Average end-to-end delay for 5 connections}
-\end{figure}
-
-
-\subsection{More Simulation Results}
-\paragraph\
-We have done simulations 50, 75 and 100 nodes with 5, 10 and 15 connections. For each scenario we have varied the pause time to be 5, 15, 30 sec to know the effect of mobility. We have done each simulation ten times by varying source-destination pairs of the flows. We observed that the throughput achieved saturates at around 100-120kbps. Hence we found that with 10 or 15 connections, the throughput achieved by the individual flows drops below the committed rate for all protocols. So we present the results obtained with 5 connections only. For all these simulations, the QoS classes we have taken are shown in Table \ref{level2}. In the five connections, we have taken two connections of class-2, two connections of class-3 and and one connection of class-4 level. We are sending all these flows at their minimum bandwidth requirement. For all these scenarios we calculated the overall throughput and overall packet delivery ratio for all the connections over the entire simulation time. We have calculated the average throughput for an interval of 15 sec for the entire duration of simulation. I have not includes the overall throughput and packet delivery ratio graphs as they are not of that much significance from the perspective of QoS.
-
-\begin{table*}[t]
-\caption{QoS class levels }
-\begin{center}
-\begin{tabular}[t]{|p{100pt}|p{100pt}|} \hline
-\label{level2}
-\emph{\textbf{\scriptsize Classes }} & \emph{\textbf{\scriptsize Range(kbps}}\\
-\hline
-\emph{\textbf{\scriptsize Class-1 }} & \emph{\textbf{\scriptsize best-effort}}\\
-\hline
-\emph{\textbf{\scriptsize Class-2 }} & \emph{\textbf{\scriptsize 16-32}}\\
-\hline
-\emph{\textbf{\scriptsize Class-3 }} & \emph{\textbf{\scriptsize 32-64}}\\
-\hline
-\emph{\textbf{\scriptsize Class-4 }} & \emph{\textbf{\scriptsize 64-128}}\\
-\hline
-\end{tabular} \end{center} \end{table*}
-
-\paragraph\
-Figures \ref{50n30pdurthro}, \ref{75n30pdurthro} and \ref{100n30pdurthro} show the duration-wise throughput 50, 75 and 100 nodes with 5 connections and 30 pause time. Similar results can be observed for 5 and 15 pause times also. Hence, they are not included here. From the graphs we can observe that
-\begin{enumerate}
- \item DiffQ-DSR is providing stable QoS guarantee throughout the simulation time whereas all other schemes are not. Sometimes they are giving high throughput and at some times they are giving almost zero throughput. More analysis is needed to understand why this is happening.
-\item ASAP with adaptation has less average throughput than all other schemes. This is because, with adaptation the flows reduce their sending rate according to the feedback information they got from the adaptation messages. So some times the flows do not even send data at their minimum bandwidth rate. Until they got another adaptation message, they will send at that rate only. Channel utilization is very less in ASAP with adaptation.
-\item ASAP with no adaptation has more average throughput than DiffQ-DSR. This is because, while admitting flows if it has sufficient bandwidth, it sends the flows at their maximum bandwidth rate throughout the simulation time and it is not adapting during the simulation.
-\end{enumerate}
-
-\begin{figure}[!h]
-\centering
-\subfigure[Density of 50 nodes]{
-\includegraphics[scale=0.57]{50n5c/5c30pdurthro.eps}
-\label{50n30pdurthro}
-}
-\subfigure[Density of 75 nodes]{
-\includegraphics[scale=0.57]{75n5c/5c30pdurthro.eps}
-\label{75n30pdurthro}
-}\\
-\subfigure[Density of 100 nodes]{
-\includegraphics[scale=0.57]{100n5c/5c30pdurthro.eps}
-\label{100n30pdurthro}
-}
-\caption{Average Throughput for each time interval(15sec) with 5 connections and 30 pause time}
-\end{figure}
-
-\newpage
-\section{Summary}
-\paragraph\
-From the results and analysis presented in the previous section, we can conclude that
-
-\begin{itemize}
-\item Under most conditions tested, DiffQ-DSR gives the best throughput and packet delivery ratio for the CR-64kbps flows. Thus, it performs best for high priority QoS flows compared to ASAP and SWAN. It is only under high density and mobility conditions, it performs marginally worse than the other two schemes. For the other flows also, in most conditions, it has better throughput and packet delivery ratio than SWAN and ASAP with adaptation. It has worse throughput than ASAP without adaptation but where ASAP transmits at peak rate, in DiffQ-DSR, sources transmit at committed rate.
-\item DiffQ-DSR provides stable QoS guarantee throughout the time whereas other schemes are not.
-\item When congestion occurs because of one flow, all flows are degraded in SWAN as it is not reserving any resources and is not maintaining any state information. But in DiffQ-DSR the flows which belong to the congested flow only get affected.
-\item DiffQ-DSR has high call acceptance ratio than ASAP with no adaptation. It is almost twice that of ASAP. But in both the schemes, the nodes do not take into consideration of the neighborhood information while calculating the available bandwidth. If we take the neighborhood information into consideration, the call acceptance ratio may reduce but we can give QoS guarantee to the flows which were admitted.
-\item In DiffQ-DSR the number of meters, policers and queues maintained per node are restricted to number of QoS levels defined whereas in ASAP, as number of connections increased these are increasing proportionally. So in this way DiffQ-DSR achieves scalability.
-\item DiffQ-DSR has average end-to-end delay less than both ASAP and SWAN. 
-
-\end{itemize}
-
-
+	  
+\section{Conclusion} \label{Result_conclusion}

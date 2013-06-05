@@ -1,33 +1,45 @@
-\section{Overview}
 \paragraph\
-    OpenVswitch, a multilayer software switch that supports NetFlow, sFlow, SPAN, RSPAN, CLI, LACP, 802.1ag as management 
-    protocols is been heavily used for network virtualization platforms. In this chapter I describe about design and 
-    implementation of OpenVswitch modification to support scalable flow monitoring. We have able to enable writing NetFlow
-    data directly to the Cassandra database from OpenVswitch using shared memory and Python Daemon. The last section detail outs our 
-    findings of experiments that done on modified OpenVswitch.
+    Cassandra plugin for \emph{ntop} as described in the previous chapter represents a single point of failure.
+    \emph{ntop} is also not scalable enough to handle netflow data generated in a data center with one instance. So we modified Open vSwitch to store NetFlow records directly into Cassandra database.
+    Storing NetFlow records directly into Cassandra database avoids single points of failure as each Open vSwitch resides in a different node. In addition, this distributed access to Cassandra results in  better scalability.
+    Unlike \emph{ntop}, Vanilla Open vSwitch does not need any load balancing. %AP: Vanilla is not correct, is it not? Because you are talking about a modified Open vSwitch here.
     
-    \section{NetFlow Monitoring}
     \paragraph\
-    NetFlow is the de-facto protocol for flow monitoring. Routers maintains ``flow cache" contains flow records that forwarded
-    by the router. These flow records later exported to a NetFlow collector using UDP. Flows are identify by IP address,
-    source and destination port, protocol and type of service. When a packet reaches one of its interface, it update ``flow cache"
-    if packet belongs to existing flows otherwise it creates a new flow. A flow is ended depending on these rules:
-    \begin{enumerate}
-     \item When a TCP RST or FIN received.
-     \item Active time out is over.
-     \item Inactive time out is over.
-     \item When ``flow cache" is over.
+    Open vSwitch is a multilayer software switch that supports NetFlow, sFlow, SPAN, RSPAN, CLI, LACP, 802.1ag as management 
+    protocols. It is  an OpenFlow \cite{openflow} compliant software switch and it is heavily used for network virtualization platform.
+    An OpenFlow switch like Open vSwitch can be managed from a centralized location. 
+    We chose Open vSwitch because of its significant usage in data centers for its centralized management capability.
+
+    \paragraph\
+    This chapter is organized as follows: in the next section, we describe about NetFlow monitoring. We also present NetFlow
+    monitoring in an OpenFlow compliant switch which is different from traditional NetFlow monitoring. Section \ref{proposedidea}
+    presents our proposed idea. Finally we conclude with Section \ref{chap4_analysis}.
+    
+    \section{NetFlow Monitoring} \label{netflow monitoring}
+    \paragraph\
+    NetFlow is the de-facto protocol for IP flow monitoring. Packets with the same source/destination IP address,
+    source/destination ports, protocol, interface and class of service are grouped into a flow. A flow in a NetFlow is also known as NetFlow record. 
+    A NetFlow enabled router maintains a NetFlow cache that contains NetFlow records which are forwarded by the router.  %AP: What are forwarded?(done)
+    When a packet reaches 
+    an interface of a router, it updates NetFlow cache, if the packet belongs to an existing flow. A flow is created in NetFlow cache if 
+    the packet does not belong to any flow in the NetFlow cache. In general, the NetFlow cache is constantly 
+    filling with flows and software in a router or switch is searching the NetFlow cache for flows that have terminated or expired. Expired 
+     flows are exported to a NetFlow collector such as \emph{ntop}.  A flow is terminated depending on these rules:
+
+     \begin{enumerate}
+     \item When a TCP RST or FIN is received.
+     \item When active timeout of a flow gets expired. %AP: Timeout is over is not at all a meaningful phrase. (done)
+     \item Whne inactive time out of flow is expired.
+     \item When NetFlow cache is full. %AP: what do you mean over? You mean when the cache is full?(done)
     \end{enumerate}
-    Other than flow key each flow records contains timestamps of first and last packet received, number of packet and bytes  received,
-    SNMP index. These flow records fields can be use for multiple analysis, like port numbers can be use for identifying application
-    patterns and so on. Table \ref{netflowheader} describes about NetFlow packet header anf table \ref{netflowrecord} describes 
-    about NetFlow record format.
-    \begin{table}
-     \label{netflowheader}
+    
+    A flow in a Netflow packet contains multiple fields as described in Table \ref{recordFormat}. Table \ref{headerFormat} describes about NetFlow packet header. %AP: Do you really need to give there here? Unless there is a strong reason I dont think this is needed. 
+    
+    \begin{table}[h]
      \begin{tabular}{|p{2cm}|p{11cm}|p{2cm}|}
       \hline
       {\bf Name} & {\bf Description} & {\bf Length in Bytes} \\ \hline
-      Version & Type of record format. & 2 \\ \hline
+      Version & NetFlow version. & 2 \\ \hline
       Count   & Number of flow records contained. & 2 \\ \hline
       SysUpTime & How long the system has been up and running. & 4 \\ \hline
       Epoch	& UNIX timestamp value when the packet was sent. & 4 \\ \hline
@@ -38,8 +50,11 @@
       Sampling Interval & First two bits hold the sampling mode; remaining 14 bits hold value of sampling interval. & 2 \\ \hline
      \end{tabular}
      \caption{Netflow Header Format}
+      \label{headerFormat}
     \end{table}
-    \begin{table}
+    
+    \begin{table}[ht]
+     
      \begin{tabular}{|p{4cm}|p{9cm}|p{2cm}|}
       \hline
       {\bf Name} & {\bf Description} & {\bf Length in Bytes} \\ \hline
@@ -64,18 +79,18 @@
       Destination Mask & Destination address prefix mask bits. & 4 \\ \hline
       Pad2 & Unused & 2 \\ \hline
       \end{tabular}
-     \label{netflowrecord}
      \caption{NetFlow Record Format}
+	\label{recordFormat}
     \end{table}
 
-
+    Flow monitoring in OpenFlow switches is different than traditional hardware switches. This is described in the next paragraph.
     
-    \paragraph{OpenVswitch as NetFlow Exporter:} OpenVswitch supports NetFlow protocol. OpenVswitch, a Openflow software switch that 
-    maintains basic flow statistics for each OpenFlow rules. Flow key in define by OpenFlow switch is different than 
-    flow key in general NetFlow enabled router or switchs. OpenFlow switches maintain ``flow table", an entry in ``flow table"
-    contains three fields . These are :
+    \paragraph{Open vSwitch as NetFlow Exporter:} Open vSwitch, an Openflow software switch, has basic flow statistics for each OpenFlow flows/rules
+    as per OpenFlow standards. OpenFlow flows/rules defined by an OpenFlow switch are different from a traditional flow in NetFlow \cite{sdnnetflow}. 
+    OpenFlow switches maintain flow tables for storing OpenFlow rules/flows. An entry in a flow table contains three fields . These are :
     \begin{enumerate}
-     \item A packet header that define flow tuple which can include upto 10 tuple in below.
+     \item A packet header that defines a flow tuple which can include upto 10 fields %AP: A tuple cannot contain 10 tuples - it can contain 10 fields.(done)
+     as follows.
 	  \begin{enumerate}
 	   \item In Port.
 	   \item VLAN ID.
@@ -88,91 +103,156 @@
 	   \item Source IP Port.
 	   \item Destination IP Port.
 	  \end{enumerate}
-      \item A action, which defines how the packet should be processed.
-      \item Statistics, which keep track of number of packets and bytes, time since last packet seen.
+      \item An action, which defines how the packet should be processed.
+      \item Statistics which keep track of the number of packets, bytes and time since last packet seen.
     \end{enumerate}
-    Using fields 1 and 3 a OpenFlow enable switches creates NetFlow packets. Though OpenVswitch calculates NetFlow in different way, 
-    it improves network visibility to 100\% \cite{sdnnetflow}.
-    \paragraph{Limitations of NetFlow Analysis using on Collectors:} 
-    NetFlow monitoring can be done either by storing flow records in some database and later analyzed by another application or 
-    NetFlow collector itself can collect and analyze flow records and store the analyzed data into database.\emph{ntop} follows these
-    analysis-store approach that is one of the reason why \emph{ntop} losses packets on high speed network. Next section describes our 
-    proposed solutions to the problem.
     
-\section{Proposed Scalable Solution for Flow Monitoring}
+    Using fields 1 and 3 OpenFlow enabled switches create NetFlow packets. 
+    %Though Open vSwitch calculates NetFlow in different ways than
+    %traditional NetFlow switches, it improves network visibility to 100\% \cite{sdnnetflow}.
+    
+%     \paragraph\
+%     Open vSwitch exports NetFlow records using UDP protocol to a NetFlow collector like \emph{ntop}. As \emph{ntop}
+%     may become single point of failure, our proposed idea is to store NetFlow data directly into Cassandra using Open vSwitch.
+%     In the next section describe our proposed idea.
+%   NetFlow collector itself can collect and analyze flow records and store the analyzed data into database.\emph{ntop} follows these
+ %   analysis-store approach that is one of the reason why \emph{ntop} losses packets on high speed network. Next section describes our 
+  %  proposed solutions to the problem.
+    
+\section{Proposed Scalable Solution for Flow Monitoring}\label{proposedidea}
 \paragraph\
-    Currently OpenVswitch can exports NetFlow packets as UDP packets to a  collector like \emph{ntop} that receives NetFlow records then 
-    analysis them. UDP is connection less protocol, it does not guarantee reliable communication. Packets may get lost while \emph{ntop}
-    while process flow records because of socket buffer overflow. In previous chapter, our results shows that if \emph{ntop} has less socket buffer 
-    it tent to losses packets. Our solution tries to avoid NetFlow collector all together allowing OpenVswitch host to store NetFlow
-    records directly to scalable database, Cassandra. Now any NetFlow analysis tool can read flow records from the database and then analysis
-    them. As OpenVswitch is distributed in nature writing flow records directly from OpenVswitch host to Cassandra, it provides scalable
-    way to collect flow records. Cassandra is scalable and distributed database offer scalable storage for our solution.
+    Currently Open vSwitch can export NetFlow packets as UDP packets to a collector like \emph{ntop}. \emph{ntop} receives NetFlow packets and  
+    analyzes them. Our solution tries to avoid NetFlow collector by storing NetFlow
+    records directly to Cassandra. The premise behind this proposed solution is that the writes require a strong scalability support as we cannot lose information. A read operation and analytics software can be slower as they are primarily for the consumption of human administrators. 
+    %Now any NetFlow analysis tool can read NetFlow records from the database for analysis.
+    As Open vSwitch is distributed in nature, storing NetFlow records directly from Open vSwitch to Cassandra is scalable.
     
-    \subsection{Design}
+    \subsection{Design and Implementation}
     \paragraph\
-	Our solution uses shared memory for storing NetFlow records from OpenVswitch. Another Python program that checks the shared 
-	memory region for new flow records store them into Cassandra using $Pycassa$. By this we avoiding any NetFlow collector which can becomes bottleneck. There are three major component 
-	of our solution
+	Our solution uses shared memory for storing NetFlow records from Open vSwitch. A Python program checks the shared 
+	memory region for new NetFlow records and stores them into Cassandra using $Pycassa$. By this we avoid any NetFlow collector.
+	There are three major components of our solution
 	\begin{enumerate}
 	 \item A shared memory based IPC.
-	 \item OpenVswitch modification to use shared memory IPC.
-	 \item A daemon that reads NetFlow packets from shared memory IPC and writes into Cassandra. 
+	 \item The modified Open vSwitch that stores Netflow packets into shared memory.
+	 \item A daemon that reads NetFlow packets from shared memory IPC and writes them into Cassandra. 
 	\end{enumerate}
 
-	\paragraph{SWSR, A shared memory IPC:} SWSR (Single Write Single Reader) provides set of API for inter process communication 
-	between two process. It uses shared memory for data buffering and semaphore for synchronization. Figure \ref{swsr} details out the
-	memory layout of the shared memory used in SWSR. Header section contains some meta-data require for synchronous access of the shared 
-	\begin{figure}[htb]
+	\subsection{SWSR, A shared memory IPC} 
+	\paragraph\
+	SWSR (Single Writer Single Reader) provides a set of APIs for inter process communication 
+	between two processes. It uses shared memory for data buffering and semaphore for synchronization. Figure \ref{swsr} illustrates the
+	memory layout of the shared memory region used in SWSR. The header section contains meta-data required for synchronous access of the shared memory. The data section contains multiple buckets as illustrated in Figure \ref{swsr}.
+
+	\begin{figure}[!htb]
 	      \centering
 	      \includegraphics[scale=.35]{swsr}
 	      \caption{Memory Layout of SWSR.} 
 	      \label{swsr}
 	\end{figure}
-	memory. A bucket in data section holds a NetFlow packet of size 1500 bytes. Header sections fields are :
+
+	The header section fields are :
 	\begin{enumerate}
-	 \item total\_bucket: Total number of bucket in the data section.
-	 \item unread\_bucket: Total number of buckets remain full.
-	 \item read\_index: It points to the start of new NetFlow record.
-	 \item write\_bucket\_index: it points to start of a new empty bucket.
-	 \item write\_index; It points to start of a new empty memory space inside bucket.
+	 \item total\_bucket: Total number of buckets in the data section.
+	 \item unread\_bucket: Total number of buckets ready with data.
+	 \item read\_index: It points to the first ready bucket in the data section.
+	 \item write\_bucket\_index: It points to start of a new empty bucket.
+	 \item write\_index: Initially it points to the start of the bucket and after every write it points to the next free location of the bucket.
 	\end{enumerate}
+	
 	APIs supported by SWSR are :
 	\begin{enumerate}
-	 \item {\bf initSWSR}(name, isOwner, bucketSize, totalBucket): It creates shared memory, if $isOwner$ flag is set otherwise it opens shared memory with the name specified.
-	 \item {\bf isFull}(swsrname): It returns true if $swsrname$ is full otherwise returns false.
-	 \item {\bf isEmpty}(swsrname): It returns true if $swsrname$ is empty otherwise returns false.
-	 \item {\bf get\_write\_index}(swsrname): It returns memory reference of current write index.
-	 \item {\bf readSWSR}(swsrname, buffer): It fills the buffer the bucket referred by read\_index then decrease the unread\_bucket atomically.
-	 \item {\bf write\_finish}(swsrname): It increase the write\_index and write\_bucket\_index
-	 if there is empty buckets available otherwise it initialize write\_index to write\_bucket\_index. It will increase unread\_bucket atomically if where are empty buckets. 
+	 \item {\bf initSWSR}(name, isOwner, bucketSize, totalBucket): It creates a shared memory segment, if $isOwner$ flag is set. If $isOwner$ is not set, it 
+	 opens the shared memory segment with the given name.
+	 \item {\bf isFull}(swsrname): It returns true if the shared memory section $swsrname$  is full; otherwise, it returns false.
+	 \item {\bf isEmpty}(swsrname): It returns true if the shared memory segment $swsrname$ is empty; otherwise, it returns false.
+	 \item {\bf get\_write\_index}(swsrname): It returns the value of the write index of $swsrname$.
+	 \item {\bf readSWSR}(swsrname, destBuffer): It fills the buffer, $destBuffer$ with bucket value referred to by read\_index then decreases the unread\_bucket atomically.
+	 \item {\bf write\_finish}(swsrname): It increases the write\_index and write\_bucket\_index
+	      if there are empty buckets available; otherwise, it initializes write\_index to write\_bucket\_index. 
+	      It will increase unread\_bucket atomically if there are empty buckets. 
+	 \item {\bf nextBucket}(swsrname): It returns the starting location of the next empty bucket. It also takes care of the wraparound condition of the shared memory in $swsrname$.
 	\end{enumerate}
-	Figure \ref{swsrraed} and \ref{swsrwrite} describe read write operation in SWSR.
-	\begin{figure}[htb]
+	
+	Figure \ref{swsrread} and \ref{swsrwrite} illustrate the read and write operations in SWSR.
+	\begin{figure}[!htb]
 	      \centering
 	      \includegraphics[scale=.35]{swsrwrite}
-	      \caption{Memory Layout of SWSR.} 
+	      \caption{Write Operation of SWSR.} 
 	      \label{swsrwrite}
 	\end{figure}
-	SWSR IPC is used in OpenVswitch for writing NetFlow packets to shared memory.
-	\paragraph{OpenVswitch Modifications:} Generally OpenVswitch writes NetFlow packets into
-	packet buffer then to a UDP socket. Now modified OpenVswitch can write NetFlow packets
-	into SWSR memory. Functions used to add SWSR support to OpenVswitch are 
+	\begin{figure}[!htb]
+	      \centering
+	      \includegraphics[scale=.35]{swsrread}
+	      \caption{Read Operation of SWSR.} 
+	      \label{swsrread}
+	\end{figure}
+
+	We have used SWSR IPC in Open vSwitch for storing NetFlow packets to shared memory.
+	
+	\subsection{Open vSwitch Modifications} 
+	\paragraph\
+	Generally Open vSwitch writes NetFlow packets into a
+	packet buffer then to a UDP socket. Our modified Open vSwitch writes NetFlow packets
+	into SWSR memory. Functions used to add SWSR support to Open vSwitch are 
 	\begin{enumerate}
 	 \item {\bf create\_swsr}(): It calls initSWSR for creation of SWSR IPC.
 	 \item {\bf gen\_shm\_netflow\_rec}(): It writes NetFlow packets to SWSR IPC.
 	 \item {\bf shm\_netflow\_run}(): It calls write\_finish() to indicate NetFlow packet has been written successfully.
 	\end{enumerate}
-	\paragraph{NfCassaStore, A Python daemon:} NfCassaStore is python daemon that reads packets
+
+	\subsection{NfCassaStore, A Python daemon:} 
+	\paragraph\
+	NfCassaStore is a python daemon that reads packets
 	from SWSR and writes into Cassandra. NfCassaStore consists of following components :
 	\begin{enumerate}
 	 \item Init(): Initialize SWSR IPC for reading.
-	 \item run(): It is infinite loop that waits for new packet and then call processPacket().
-	 \item processPacket(): It process NetFlow packet and store into Cassandra.
+	 \item run(): It is an infinite loop that waits for a new packet and then call processPacket().
+	 \item processPacket(): It processes the NetFlow packet and stores it into Cassandra.
 	\end{enumerate}
-      \paragraph\
-      These three components completes our solutions. In the next section I describe about our test
-      result done on the modified OpenVswitch.
+
+	\paragraph{How It Works:}
+      We can configure Open vSwitch to enable SWSR IPC using $ovs-vsctl$ command. This command is useful to configure runtime parameters of Open vSwitch.
+      SWSR buffer size is also configurable with the same command. If we enable SWSR IPC, Open vSwitch creates a shared memory and a semaphore.
+      Open vSwitch writes NetFlow packets to the SWSR shared buffer. It uses $write\_finish()$ to indicate end of NetFlow packet. On the other side
+      NfCassaStore reads NetFlow packets using $readSWSR()$ and then writes the NetFlow records into Cassandra. Figure \ref{ovsmod} illustrates the work flow of our three components. 
+      %AP: 
+      
+      	%memory layout of the shared memory region used in SWSR. Header section contains meta-data require for synchronous access of the shared 
+%AP: What is this above may I ask? Starts in the middle of a sentence and also stops in the middle of a sentence!      	
+	\begin{figure}[!htb]
+	      \centering
+	      \includegraphics[scale=.35]{ovsmod}
+	      \caption{Work flow of the Three Components of Our Proposed Solution.} 
+	      \label{ovsmod}
+	\end{figure}
+      
+   \section{Analysis of Our Proposed Solution}\label{chap4_analysis}
+   The main advantages of our proposed solution are:
+   \begin{enumerate}
+    \item We are enabling NetFlow collection in the Open vSwitch which is distributed over the data center. So our solution is not having any single points of failure.
+    \item NetFlow collection with the modified Open vSwitch does not require any load balancing.
+   \end{enumerate}
+   
+   \paragraph\
+   In this chapter we have explained our modification to Open vSwitch to directly send Netflow packets to Cassandra without the intervention of a centralized NetFlow collector. This is done with the premise that NetFlow packets are generated at a very high speed in a data center and a centralized NetFlow collector will have scalability issues unless it is implemented as a cluster. Clusters of NetFlow collectors have other issues such as :
+   \begin{enumerate}
+	\item Inability to de-duplicate the NetFlow packets.
+	\item Explicit load balancing required during configuration of NetFlow clients.
+	\item Ability to recover from node failures in the cluster.
+   \end{enumerate}
+
+   Since all of these features are already built into the NoSQL databases, we believe writing directly to Cassandra from a NetFlow client will help avoid complexity in the solution. In the next chapter, we present our experimental setup and the results obtained for the various experiments carried out by us.
+   
+   %with OpenFlow compliant switch. We also discussed design and implementation of   our proposed idea.   In the next chapter we present the various test results and analysis that we have done. 
+
+   %\section{Results}\label{chap4results}
+%      This section we tested packet drop pattern for NfCassaStore with shared memory buffer size. We have used the same testbed described by the previous chapter.
+%      Figure \ref{shm3} shows the graphical result of our experiements. From result we can see NfCassaStore stoped loosing any packets 256KB buffer size
+%	\begin{figure}[htb]
+%	      \centering
+%	      \includegraphics[scale=1]{ntop/shm3}
+%	      \caption{Packet Drops per minute.} 
+%	      \label{shm3}
+%	\end{figure}
 	
-
-
